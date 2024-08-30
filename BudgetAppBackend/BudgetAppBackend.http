@@ -1,0 +1,6 @@
+@BudgetAppBackend_HostAddress = http://localhost:5073
+
+GET {{BudgetAppBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
