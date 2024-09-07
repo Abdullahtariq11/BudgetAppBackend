@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using BudgetApp.Application.Service.Contracts;
 using BudgetApp.Domain.Contracts;
 using BudgetApp.Domain.Models;
+using BudgetApp.Shared.Dtos.TransactionDto;
+using BudgetApp.Shared.RequestFeatures;
 
 namespace BudgetApp.Application.Service
 {
@@ -17,10 +20,18 @@ namespace BudgetApp.Application.Service
             _repositoryManager = repositoryManager;
         }
 
-        public async Task<ICollection<Transaction>> GetAllTransaction(bool trackChanges)
+        public async Task<ICollection<Transaction>> GetAllTransaction(TransactionParameter parameter,bool trackChanges)
         {
-            var transactions= await _repositoryManager.TransactionRepository.GetAllAsync(trackChanges);
+
+            var transactions= await _repositoryManager.TransactionRepository.GetAllAsync(parameter,trackChanges);
             if(transactions==null) return null;
+            List<TransactionDto> transactionDtoList = new List<TransactionDto>();
+            foreach (var transaction in transactions)
+            {
+                var transactionDto=new TransactionDto(transaction.Amount,transaction.Type.ToString(),
+                    transaction.Category,transaction.TransactionDate,transaction.Description);
+                transactionDtoList.Add(transactionDto);
+            }
             return transactions;
         }
 
@@ -30,8 +41,17 @@ namespace BudgetApp.Application.Service
             if (transaction == null) return null;
             return transaction;
         }
-        public Transaction CreateTransaction(Transaction transaction)
+        public Transaction CreateTransaction(TransactionDto transactionDto)
         {
+            Enum.TryParse(transactionDto.transactionType, true, out TransactionType transactionType);
+            var transaction = new Transaction()
+            {
+                Amount = transactionDto.amount,
+                TransactionDate = transactionDto.transactionDate,
+                Description = transactionDto.description,
+                Category = transactionDto.category,
+                Type = transactionType
+            };
             _repositoryManager.TransactionRepository.CreateTransaction(transaction);
              _repositoryManager.Save();
             return transaction;

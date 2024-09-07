@@ -26,6 +26,21 @@ namespace BudgetApp.Domain.Models
         [MaxLength(60,ErrorMessage ="Maximum Length for Description is 60 characters")]
         public string? Description { get; set; }
 
+
+        /// <summary>
+        /// Foreign key and navigation property
+        /// </summary>
+
+        [Required(ErrorMessage ="userId is required")]
+        public string? UserID { get; set; }
+        public User? User { get; set; }
+
+        
+        public Guid? CardId { get; set; }
+        public Card? Card { get; set; }
+
+
+
     }
     public enum TransactionType
     {

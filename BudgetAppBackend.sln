@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.API", "BudgetAppBackend\BudgetApp.API.csproj", "{C5E035AD-D14C-4313-988E-E19FBDE83465}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetApp.API", "BudgetAppBackend\BudgetApp.API.csproj", "{C5E035AD-D14C-4313-988E-E19FBDE83465}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.Domain", "Domain\BudgetApp.Domain.csproj", "{87D0CDC4-FAAE-4E2E-8F2E-00AA3F24136F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetApp.Domain", "Domain\BudgetApp.Domain.csproj", "{87D0CDC4-FAAE-4E2E-8F2E-00AA3F24136F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.Application", "Service\BudgetApp.Application.csproj", "{CBA6AD37-0CBA-471D-886B-4A0F4E319FF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetApp.Application", "Service\BudgetApp.Application.csproj", "{CBA6AD37-0CBA-471D-886B-4A0F4E319FF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.Infrastructure", "Infrastructure\BudgetApp.Infrastructure.csproj", "{8A14FF58-7453-4042-94F9-0FD5E4168052}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetApp.Infrastructure", "Infrastructure\BudgetApp.Infrastructure.csproj", "{8A14FF58-7453-4042-94F9-0FD5E4168052}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.Shared", "BudgetApp.Shared\BudgetApp.Shared.csproj", "{17CAEDEC-8E2C-4454-9FE0-8AAB0272FD78}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{8A14FF58-7453-4042-94F9-0FD5E4168052}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A14FF58-7453-4042-94F9-0FD5E4168052}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A14FF58-7453-4042-94F9-0FD5E4168052}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17CAEDEC-8E2C-4454-9FE0-8AAB0272FD78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17CAEDEC-8E2C-4454-9FE0-8AAB0272FD78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17CAEDEC-8E2C-4454-9FE0-8AAB0272FD78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17CAEDEC-8E2C-4454-9FE0-8AAB0272FD78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

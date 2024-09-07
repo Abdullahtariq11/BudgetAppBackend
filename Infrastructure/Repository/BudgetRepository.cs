@@ -8,7 +8,7 @@ using BudgetApp.Domain.Models;
 
 namespace BudgetApp.Infrastructure.Repository
 {
-    public class BudgetRepository : RepositoryBase<Budget>, IBudgetRepository
+    public class BudgetRepository : RepositoryBase<Card>, IBudgetRepository
     {
         public BudgetRepository(RepositoryContext context) : base(context)
         {

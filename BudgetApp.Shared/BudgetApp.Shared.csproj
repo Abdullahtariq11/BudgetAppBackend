@@ -6,9 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BudgetApp.Shared\BudgetApp.Shared.csproj" />
-    <ProjectReference Include="..\Domain\BudgetApp.Domain.csproj" />
-  </ItemGroup>
-
 </Project>

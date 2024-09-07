@@ -1,5 +1,7 @@
 ﻿using BudgetApp.Application.Service.Contracts;
 using BudgetApp.Domain.Models;
+using BudgetApp.Shared.Dtos.TransactionDto;
+using BudgetApp.Shared.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,12 +19,13 @@ namespace BudgetApp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTransactions()
+        public async Task<IActionResult> GetTransactions([FromQuery] TransactionParameter parameter )
         {
-            var transactions= await _serviceManager.transactionService.GetAllTransaction(trackChanges:false);
+            var transactions= await _serviceManager.transactionService.GetAllTransaction(parameter,trackChanges:false);
             if (transactions == null) return NotFound();
             return Ok(transactions);
         }
+
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetTransaction([FromRoute]Guid id)
         {
@@ -31,7 +34,7 @@ namespace BudgetApp.API.Controllers
             return Ok(transaction);
         }
         [HttpPost]
-        public  IActionResult CreateTransaction([FromBody] Transaction transaction)
+        public  IActionResult CreateTransaction([FromBody] TransactionDto transaction)
         {
             if(transaction == null) return NoContent();
             _serviceManager.transactionService.CreateTransaction(transaction);
