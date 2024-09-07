@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BudgetApp.Domain.Models;
 using BudgetApp.Infrastructure.Configuration;
+using Infrastructure.Configuration;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,6 +25,7 @@ namespace BudgetApp.Infrastructure
             modelBuilder.ApplyConfiguration(new CardConfiguration());
             modelBuilder.ApplyConfiguration(new BudgetConfiguration());
             modelBuilder.ApplyConfiguration(new TransactionConfiguration());
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
         }
         /// <summary>

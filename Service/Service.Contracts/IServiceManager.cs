@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Service.Service.Contracts;
 
 namespace BudgetApp.Application.Service.Contracts
 {
@@ -11,5 +12,6 @@ namespace BudgetApp.Application.Service.Contracts
         public ITransactionService transactionService { get; }
         public IBudgetService budgetService { get;  }
         public IBudgetCategoryService budgetCategoryService { get; }
+        public IUserService userService { get;  }
     }
 }

@@ -29,6 +29,9 @@ builder.Services.AddSwaggerGen(
             Version= "v1"
         });
     });
+    builder.Services.AddAuthentication();
+    builder.Services.ConfigureIdentity();
+    
 
 var app = builder.Build();
 
@@ -46,7 +49,7 @@ app.UseCors(options =>
            .AllowAnyHeader()
            .AllowAnyMethod();
 });
-
+app.UseAuthentication();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

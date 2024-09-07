@@ -8,6 +8,8 @@ using System.Transactions;
 
 namespace BudgetApp.Shared.Dtos.TransactionDto
 {
-    public record TransactionDto(decimal amount,string transactionType,string category,DateTime transactionDate,string description);
+    public record TransactionDto(decimal amount,string transactionType,
+    string category,DateTime transactionDate,string description,
+    string UserID);
 
 }
