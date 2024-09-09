@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BudgetApp.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -237,17 +237,26 @@ namespace BudgetApp.Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "3a04b096-1d95-448f-8a07-ec00b72c8b69", null, "Customer", "CUSTOMER" },
+                    { "71a1797a-b2fa-4c77-b50d-4adad0744e25", null, "Admin", "ADMIN" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4", 0, "906fba59-66db-4b10-b7bb-500255036e99", "abdullahtariq096@gmail.com", true, "Abdullah", "Tariq", false, null, "ABDULLAHTARIQ096@GMAIL.COM", "ABDULLAHT", "AQAAAAIAAYagAAAAED/55ys55my9V7VIKPLoqFq9l6vyUDrACnR6bWKFbKy0B6/+liP7YysM1NfMB4gBXg==", null, false, "67bb697c-6ecc-4bf4-abef-c60c4726e701", false, "abdullahT" });
+                values: new object[] { "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4", 0, "1473908f-2d87-4668-81af-624d40c2013a", "abdullahtariq096@gmail.com", true, "Abdullah", "Tariq", false, null, "ABDULLAHTARIQ096@GMAIL.COM", "ABDULLAHT", "AQAAAAIAAYagAAAAELPHMVwaD5wEdEFMP5gGSoFcdcqtAnqQP0qD5u4GoDBzZCr1PT5/TLNQYCuh4k+Ynw==", null, false, "8c208bfd-7934-4c72-bb11-bbb08fcb6317", false, "abdullahT" });
 
             migrationBuilder.InsertData(
                 table: "BudgetCategories",
                 columns: new[] { "BudgetCategoryId", "AllocatedAmount", "CategoryName", "LastUpdated", "RemainingAmount", "UserID" },
                 values: new object[,]
                 {
-                    { new Guid("2b67c8b2-f5c1-4560-a574-f3873cfc24f7"), 500m, "Groceries", new DateTime(2024, 9, 6, 6, 1, 29, 320, DateTimeKind.Utc).AddTicks(8972), 0m, "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4" },
-                    { new Guid("d763bf77-a4e1-44ba-8dce-10638184ebb0"), 200m, "Entertainment", new DateTime(2024, 10, 6, 6, 1, 29, 320, DateTimeKind.Utc).AddTicks(8977), 0m, "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4" }
+                    { new Guid("435b7e31-96b0-4703-9958-623b7a018a86"), 200m, "Entertainment", new DateTime(2024, 10, 9, 5, 34, 25, 232, DateTimeKind.Utc).AddTicks(760), 0m, "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4" },
+                    { new Guid("57270de8-4b7e-4346-9f76-bf2d1d85a6aa"), 500m, "Groceries", new DateTime(2024, 9, 9, 5, 34, 25, 232, DateTimeKind.Utc).AddTicks(750), 0m, "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4" }
                 });
 
             migrationBuilder.InsertData(
@@ -264,8 +273,8 @@ namespace BudgetApp.Infrastructure.Migrations
                 columns: new[] { "TransactionId", "Amount", "CardId", "Category", "Description", "TransactionDate", "Type", "UserID" },
                 values: new object[,]
                 {
-                    { new Guid("3f1d451c-a56d-4ab0-a6c1-29360f83a2df"), 500m, new Guid("54e0c90e-1e91-42d1-8d24-8e00fa63ec0b"), "Freelance", "Web development project", new DateTime(2024, 9, 6, 6, 1, 29, 320, DateTimeKind.Utc).AddTicks(9554), 0, "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4" },
-                    { new Guid("8e094510-9c17-401e-bbd5-7ba415b22c16"), 200m, new Guid("54e0c90e-1e91-42d1-8d24-8e00fa63ec0b"), "Groceries", "Weekly groceries", new DateTime(2024, 9, 6, 6, 1, 29, 320, DateTimeKind.Utc).AddTicks(9550), 1, "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4" }
+                    { new Guid("1303f4a7-4480-4e08-a93e-c6726b353c8b"), 500m, new Guid("54e0c90e-1e91-42d1-8d24-8e00fa63ec0b"), "Freelance", "Web development project", new DateTime(2024, 9, 9, 5, 34, 25, 232, DateTimeKind.Utc).AddTicks(1100), 0, "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4" },
+                    { new Guid("a04d5e01-1428-415b-895c-a50c5bf3f5b6"), 200m, new Guid("54e0c90e-1e91-42d1-8d24-8e00fa63ec0b"), "Groceries", "Weekly groceries", new DateTime(2024, 9, 9, 5, 34, 25, 232, DateTimeKind.Utc).AddTicks(1090), 1, "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -55,19 +55,19 @@ namespace BudgetApp.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f377faa4-4336-4b2b-adc7-0aea3cc15e1b"),
+                            Id = new Guid("57270de8-4b7e-4346-9f76-bf2d1d85a6aa"),
                             AllocatedAmount = 500m,
                             CategoryName = "Groceries",
-                            LastUpdated = new DateTime(2024, 9, 7, 3, 41, 23, 26, DateTimeKind.Utc).AddTicks(7760),
+                            LastUpdated = new DateTime(2024, 9, 9, 5, 34, 25, 232, DateTimeKind.Utc).AddTicks(750),
                             RemainingAmount = 0m,
                             UserID = "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4"
                         },
                         new
                         {
-                            Id = new Guid("b336cbc3-409f-4554-ade4-e4388c4c7af2"),
+                            Id = new Guid("435b7e31-96b0-4703-9958-623b7a018a86"),
                             AllocatedAmount = 200m,
                             CategoryName = "Entertainment",
-                            LastUpdated = new DateTime(2024, 10, 7, 3, 41, 23, 26, DateTimeKind.Utc).AddTicks(7760),
+                            LastUpdated = new DateTime(2024, 10, 9, 5, 34, 25, 232, DateTimeKind.Utc).AddTicks(760),
                             RemainingAmount = 0m,
                             UserID = "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4"
                         });
@@ -169,23 +169,23 @@ namespace BudgetApp.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("0ee1dfb2-ba31-4887-a753-6123d1fe4c95"),
+                            Id = new Guid("a04d5e01-1428-415b-895c-a50c5bf3f5b6"),
                             Amount = 200m,
                             CardId = new Guid("54e0c90e-1e91-42d1-8d24-8e00fa63ec0b"),
                             Category = "Groceries",
                             Description = "Weekly groceries",
-                            TransactionDate = new DateTime(2024, 9, 7, 3, 41, 23, 26, DateTimeKind.Utc).AddTicks(8080),
+                            TransactionDate = new DateTime(2024, 9, 9, 5, 34, 25, 232, DateTimeKind.Utc).AddTicks(1090),
                             Type = 1,
                             UserID = "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4"
                         },
                         new
                         {
-                            Id = new Guid("cc25f84c-b612-40c6-aa7f-a9e167b769ec"),
+                            Id = new Guid("1303f4a7-4480-4e08-a93e-c6726b353c8b"),
                             Amount = 500m,
                             CardId = new Guid("54e0c90e-1e91-42d1-8d24-8e00fa63ec0b"),
                             Category = "Freelance",
                             Description = "Web development project",
-                            TransactionDate = new DateTime(2024, 9, 7, 3, 41, 23, 26, DateTimeKind.Utc).AddTicks(8090),
+                            TransactionDate = new DateTime(2024, 9, 9, 5, 34, 25, 232, DateTimeKind.Utc).AddTicks(1100),
                             Type = 0,
                             UserID = "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4"
                         });
@@ -267,7 +267,7 @@ namespace BudgetApp.Infrastructure.Migrations
                         {
                             Id = "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "dcf9a4c7-aacd-491e-a145-d84e639af2c8",
+                            ConcurrencyStamp = "1473908f-2d87-4668-81af-624d40c2013a",
                             Email = "abdullahtariq096@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Abdullah",
@@ -275,9 +275,9 @@ namespace BudgetApp.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ABDULLAHTARIQ096@GMAIL.COM",
                             NormalizedUserName = "ABDULLAHT",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAPK/i1kY1XBPxkBnTZX7DHWbHPW38aO+30DzFf+LRK63IIJOdI8XU0pjKnDdPkt6w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELPHMVwaD5wEdEFMP5gGSoFcdcqtAnqQP0qD5u4GoDBzZCr1PT5/TLNQYCuh4k+Ynw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d4b03b5a-3107-45f2-b1f6-e9ff67f4b268",
+                            SecurityStamp = "8c208bfd-7934-4c72-bb11-bbb08fcb6317",
                             TwoFactorEnabled = false,
                             UserName = "abdullahT"
                         });
@@ -307,6 +307,20 @@ namespace BudgetApp.Infrastructure.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "71a1797a-b2fa-4c77-b50d-4adad0744e25",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "3a04b096-1d95-448f-8a07-ec00b72c8b69",
+                            Name = "Customer",
+                            NormalizedName = "CUSTOMER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

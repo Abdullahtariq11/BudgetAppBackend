@@ -25,13 +25,6 @@ namespace BudgetApp.Application.Service
 
             var transactions= await _repositoryManager.TransactionRepository.GetAllAsync(parameter,trackChanges);
             if(transactions==null) return null;
-            List<TransactionDto> transactionDtoList = new List<TransactionDto>();
-            foreach (var transaction in transactions)
-            {
-                var transactionDto=new TransactionDto(transaction.Amount,transaction.Type.ToString(),
-                    transaction.Category,transaction.TransactionDate,transaction.Description);
-                transactionDtoList.Add(transactionDto);
-            }
             return transactions;
         }
 
@@ -50,7 +43,8 @@ namespace BudgetApp.Application.Service
                 TransactionDate = transactionDto.transactionDate,
                 Description = transactionDto.description,
                 Category = transactionDto.category,
-                Type = transactionType
+                Type = transactionType,
+                UserID=transactionDto.UserID
             };
             _repositoryManager.TransactionRepository.CreateTransaction(transaction);
              _repositoryManager.Save();
