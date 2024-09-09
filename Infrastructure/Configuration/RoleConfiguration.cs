@@ -16,7 +16,7 @@ namespace Infrastructure.Configuration
                 new IdentityRole
                 {
                     Name="Admin",
-                    NormalizedName="Admin"
+                    NormalizedName="ADMIN"
                 },
                 new IdentityRole
                 {
