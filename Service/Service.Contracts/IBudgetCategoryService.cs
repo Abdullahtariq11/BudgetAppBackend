@@ -3,10 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BudgetApp.Domain.Models;
+using BudgetApp.Shared.Dtos.BudgetCategoryDto;
 
 namespace BudgetApp.Application.Service.Contracts
 {
     public interface IBudgetCategoryService
     {
+        public Task<ICollection<BudgetCategory>> GetBudgetCategoriesAsync(string userId,bool trackChanges);
+        public  Task<BudgetCategory> GetBudgetCategoryByIdAsync(string userId,Guid id, bool trackChanges);
+        public  Task<CreatedCategoryDto> CreateBudgetCategoryForUserAsync(string userId, CreatedCategoryDto budgetCategory,bool trackChanges);
+        public  Task<BudgetCategory> DeleteBudgetCategoryForUserAsync(string userId,Guid id);
     }
 }
