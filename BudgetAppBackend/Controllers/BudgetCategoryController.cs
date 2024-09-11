@@ -51,13 +51,24 @@ namespace BudgetAppBackend.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteBudgetCategory(string userId, Guid id)
         {
-            var budget=await _serviceManager.budgetCategoryService.DeleteBudgetCategoryForUserAsync(userId,id);
+            var budget = await _serviceManager.budgetCategoryService.DeleteBudgetCategoryForUserAsync(userId, id);
             if (budget == null)
             {
                 return BadRequest("Not deleted");
             }
             return Ok(budget);
 
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> UpdateCategory(string userId, Guid id, CreatedCategoryDto budgetCategory)
+        {
+            var budget = await _serviceManager.budgetCategoryService.UpdateBudgetCategoryForUserAsync(userId, id,budgetCategory,trackChanges:true);
+            if (budget == null)
+            {
+                return BadRequest("Not updated");
+            }
+            return Ok(budget);
         }
 
 

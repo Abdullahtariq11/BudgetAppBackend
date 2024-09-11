@@ -14,5 +14,6 @@ namespace BudgetApp.Application.Service.Contracts
         public  Task<BudgetCategory> GetBudgetCategoryByIdAsync(string userId,Guid id, bool trackChanges);
         public  Task<CreatedCategoryDto> CreateBudgetCategoryForUserAsync(string userId, CreatedCategoryDto budgetCategory,bool trackChanges);
         public  Task<BudgetCategory> DeleteBudgetCategoryForUserAsync(string userId,Guid id);
+        public Task<CreatedCategoryDto> UpdateBudgetCategoryForUserAsync(string userId,Guid id, CreatedCategoryDto budgetCategory, bool trackChanges);
     }
 }

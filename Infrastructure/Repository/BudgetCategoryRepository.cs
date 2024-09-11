@@ -41,7 +41,9 @@ namespace BudgetApp.Infrastructure.Repository
 
         public void UpdateBudgetCategory(string userId, BudgetCategory category)
         {
-            throw new NotImplementedException();
+            category.UserID = userId;
+            Update(category);
+            
         }
     }
 }

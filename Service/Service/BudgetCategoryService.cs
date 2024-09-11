@@ -63,6 +63,20 @@ namespace BudgetApp.Application.Service
             return budget;
         }
 
-
+        public async Task<CreatedCategoryDto> UpdateBudgetCategoryForUserAsync(string userId,Guid id, CreatedCategoryDto budgetCategory, bool trackChanges)
+        {
+            var budget = await _repositoryManager.BudgetCategoryRepository.GetByIdAsync(userId, id, trackChanges);
+            if (budget == null)
+            {
+                return null;
+            }
+            budget.AllocatedAmount=budgetCategory.allocatedAmount;
+            budget.CategoryName=budgetCategory.categoryName;
+            budget.RemainingAmount=budgetCategory.remainingAmount;
+            budget.LastUpdated=budgetCategory.lastUpdated;
+            _repositoryManager.BudgetCategoryRepository.UpdateBudgetCategory(userId,budget);
+            _repositoryManager.Save();
+            return budgetCategory;
+        }
     }
 }
