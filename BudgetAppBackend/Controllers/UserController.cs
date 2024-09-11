@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BudgetAppBackend.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/Users")]
 
 
     public class UserController : ControllerBase
