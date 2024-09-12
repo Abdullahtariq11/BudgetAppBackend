@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BudgetApp.Domain.Contracts;
+using Infrastructure.Repository;
 
 namespace BudgetApp.Infrastructure.Repository
 {
@@ -14,14 +15,14 @@ namespace BudgetApp.Infrastructure.Repository
     {
         private readonly RepositoryContext repositoryContext;
         private readonly Lazy<TransactionRepository> transactionRepository;
-        private readonly Lazy<BudgetRepository> budgetRepository;
+        private readonly Lazy<CardRepository> cardRepository;
         private readonly Lazy<BudgetCategoryRepository> categoryRepository;
         public RepositoryManager(RepositoryContext context )
         {
             repositoryContext= context;
             ///using lazy intialization to improver performance as repository only created when needed
             transactionRepository= new Lazy<TransactionRepository>(()=>new TransactionRepository(context));
-            budgetRepository= new Lazy<BudgetRepository>(()=>new BudgetRepository(context));
+            cardRepository= new Lazy<CardRepository>(()=>new CardRepository(context));
             categoryRepository = new Lazy<BudgetCategoryRepository>(()=>new BudgetCategoryRepository(context));
         }
 
@@ -29,7 +30,7 @@ namespace BudgetApp.Infrastructure.Repository
 
         public IBudgetCategoryRepository BudgetCategoryRepository => categoryRepository.Value;
 
-        public IBudgetRepository BudgetRepository => budgetRepository.Value;
+        public ICardRepository CardRepository => cardRepository.Value;
 
         public  void Save()
         {
