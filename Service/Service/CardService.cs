@@ -6,40 +6,81 @@ using System.Threading.Tasks;
 using BudgetApp.Application.Service.Contracts;
 using BudgetApp.Domain.Contracts;
 using BudgetApp.Domain.Models;
+using BudgetApp.Shared.Dtos.CardDto;
 
 namespace BudgetApp.Application.Service
 {
-    public class CardService:ICardService
+    public class CardService : ICardService
     {
         private readonly IRepositoryManager _repositoryManager;
         public CardService(IRepositoryManager repositoryManager)
         {
-            _repositoryManager=repositoryManager;
+            _repositoryManager = repositoryManager;
         }
 
-        public Task<Card> CreateBudgetCategoryForUserAsync(string userId, Card card, bool trackChanges)
+        public async Task<Card> CreateCardForUserAsync(string userId, CreatedCardDto card, bool trackChanges)
         {
-            throw new NotImplementedException();
+            var cards = await _repositoryManager.CardRepository.GetAllAsync(userId, trackChanges);
+            if (cards == null || cards == null)
+            {
+                return null;
+            }
+
+            Enum.TryParse(card.cardType, true, out CardType cardType);
+            var newCard = new Card
+            {
+               CardName=card.CardName,
+               Balance=card.Balance,
+               AvailableBalance=card.AvailableBalance,
+               TotalCreditLimit=card.TotalCreditLimit,
+               cardType=cardType,
+            };
+
+            _repositoryManager.CardRepository.CreateCard(userId, newCard);
+            _repositoryManager.Save();
+            return newCard;
         }
 
-        public Task<Card> DeleteBudgetCategoryForUserAsync(string userId, Guid id)
+        public async Task<Card> DeleteCardForUserAsync(string userId, Guid id)
         {
-            throw new NotImplementedException();
+             var card = await _repositoryManager.CardRepository.GetByIdAsync(userId,id, trackChanges:true);
+            if (card == null)
+            {
+                return null;
+            }
+            _repositoryManager.CardRepository.DeleteCard(card);
+            _repositoryManager.Save();
+            return card;
         }
 
-        public Task<ICollection<Card>> GetBudgetCategoriesAsync(string userId, bool trackChanges)
+        public async Task<ICollection<Card>> GetCardAsync(string userId, bool trackChanges)
         {
-            throw new NotImplementedException();
+            var cards = await _repositoryManager.CardRepository.GetAllAsync(userId, trackChanges);
+            return cards;
         }
 
-        public Task<Card> GetBudgetCategoryByIdAsync(string userId, Guid id, bool trackChanges)
+        public async Task<Card> GetCardByIdAsync(string userId, Guid id, bool trackChanges)
         {
-            throw new NotImplementedException();
+            var card = await _repositoryManager.CardRepository.GetByIdAsync(userId,id, trackChanges);
+            return card;
         }
 
-        public Task<Card> UpdateBudgetCategoryForUserAsync(string userId, Guid id, Card card, bool trackChanges)
+        public async Task<CreatedCardDto> UpdateCardForUserAsync(string userId, Guid id, CreatedCardDto updatedCard, bool trackChanges)
         {
-            throw new NotImplementedException();
+            var card = await _repositoryManager.CardRepository.GetByIdAsync(userId,id, trackChanges);
+            if (card == null)
+            {
+                return null;
+            }
+            Enum.TryParse(updatedCard.cardType, true, out CardType cardType);
+            card.AvailableBalance = updatedCard.AvailableBalance;
+            card.CardName = updatedCard.CardName;
+            card.Balance = updatedCard.Balance;
+            card.cardType=cardType;
+
+            _repositoryManager.CardRepository.UpdateCard(userId,card);
+            _repositoryManager.Save();
+            return updatedCard;
         }
     }
 }
