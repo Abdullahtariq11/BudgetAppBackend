@@ -10,7 +10,7 @@ namespace BudgetApp.Domain.Contracts
     {
         ITransactionRepository TransactionRepository { get; }
         IBudgetCategoryRepository BudgetCategoryRepository { get; }
-        IBudgetRepository BudgetRepository { get; }
+        ICardRepository CardRepository { get; }
         void Save();
     }
 }

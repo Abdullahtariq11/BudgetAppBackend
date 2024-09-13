@@ -10,7 +10,7 @@ namespace BudgetApp.Application.Service.Contracts
     public interface IServiceManager
     {
         public ITransactionService transactionService { get; }
-        public IBudgetService budgetService { get;  }
+        public ICardService cardService { get;  }
         public IBudgetCategoryService budgetCategoryService { get; }
         public IUserService userService { get;  }
     }
