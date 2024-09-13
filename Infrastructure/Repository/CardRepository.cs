@@ -7,12 +7,14 @@ using BudgetApp.Domain.Models;
 using BudgetApp.Infrastructure;
 using BudgetApp.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+
 
 namespace Infrastructure.Repository
 {
     public class CardRepository : RepositoryBase<Card>,ICardRepository
     {
-        public CardRepository(RepositoryContext context) : base(context)
+        public CardRepository(RepositoryContext context,ILogger logger) : base(context,logger)
         {
         }
         public void CreateCard(string userId, Card card)

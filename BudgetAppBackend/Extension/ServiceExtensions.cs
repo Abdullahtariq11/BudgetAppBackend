@@ -6,6 +6,9 @@ using BudgetApp.Infrastructure;
 using BudgetApp.Infrastructure.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+using Serilog.Configuration;
+using Serilog.Events;
 
 namespace BudgetApp.API.Extension
 {
@@ -33,5 +36,17 @@ namespace BudgetApp.API.Extension
             .AddEntityFrameworkStores<RepositoryContext>()
             .AddDefaultTokenProviders();
         }
+        /// <summary>
+        /// Configure Serilog
+        /// </summary>
+
+        public static void ConfigureSerilog(this IHostBuilder host)
+        {
+            host.UseSerilog((context,configuration)=>{
+                 configuration.ReadFrom.Configuration(context.Configuration);
+                 //.MinimumLevel.Override("Microsoft",LogEventLevel.Warning);
+            });
+        }
+
     }
 }

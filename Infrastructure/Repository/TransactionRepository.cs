@@ -7,12 +7,14 @@ using BudgetApp.Domain.Contracts;
 using BudgetApp.Domain.Models;
 using BudgetApp.Shared.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+
 
 namespace BudgetApp.Infrastructure.Repository
 {
     public class TransactionRepository : RepositoryBase<Transaction>, ITransactionRepository
     {
-        public TransactionRepository(RepositoryContext context) : base(context)
+        public TransactionRepository(RepositoryContext context,ILogger logger) : base(context,logger)
         {
         }
         public async Task<ICollection<Transaction>> GetAllAsync(TransactionParameter parameter, bool trackChanges)
