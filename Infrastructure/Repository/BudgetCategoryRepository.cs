@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 using BudgetApp.Domain.Contracts;
 using BudgetApp.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+
+
 
 namespace BudgetApp.Infrastructure.Repository
 {
     public class BudgetCategoryRepository : RepositoryBase<BudgetCategory>, IBudgetCategoryRepository
     {
-        public BudgetCategoryRepository(RepositoryContext context) : base(context)
+
+        public BudgetCategoryRepository(RepositoryContext context,ILogger logger) : base(context,logger)
         {
         }
 

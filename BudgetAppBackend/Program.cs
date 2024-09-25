@@ -1,12 +1,20 @@
 using BudgetApp.API.Extension;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigurePosgreSqlContext(builder.Configuration);
 builder.Services.AddControllers();
+    //Add logger service
+builder.Host.UseSerilog((context, configuration) =>
+{
+    configuration.ReadFrom.Configuration(context.Configuration);
+});
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -14,9 +22,6 @@ builder.Services.AddCors(options =>
                           .AllowAnyMethod()
                           .AllowAnyHeader());
 });
-
-
-
 
 //Add Swagger services
 builder.Services.AddEndpointsApiExplorer();
@@ -31,10 +36,12 @@ builder.Services.AddSwaggerGen(
     });
     builder.Services.AddAuthentication();
     builder.Services.ConfigureIdentity();
+
+
     
 
 var app = builder.Build();
-
+app.UseSerilogRequestLogging();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
