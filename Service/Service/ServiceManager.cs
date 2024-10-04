@@ -7,6 +7,7 @@ using BudgetApp.Application.Service.Contracts;
 using BudgetApp.Domain.Contracts;
 using BudgetApp.Domain.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Service.Service;
 using Service.Service.Contracts;
 
@@ -18,12 +19,14 @@ namespace BudgetApp.Application.Service
         private readonly Lazy<BudgetCategoryService> _budgetCategoryService;
         private readonly Lazy<TransactionService> _transactionService;
         private readonly Lazy<UserService> _userService;
-        public ServiceManager(IRepositoryManager repositoryManager,UserManager<User> userManager,SignInManager<User> signInManager)
+     
+        
+        public ServiceManager(IRepositoryManager repositoryManager,UserManager<User> userManager,SignInManager<User> signInManager, ILoggerFactory loggerFactory)
         {
-            _cardService=new Lazy<CardService>(()=> new CardService(repositoryManager));
-            _budgetCategoryService = new Lazy<BudgetCategoryService>(() => new BudgetCategoryService(repositoryManager));
-            _transactionService = new Lazy<TransactionService>(() => new TransactionService(repositoryManager));
-            _userService=new Lazy<UserService>(()=> new UserService(userManager,signInManager));
+            _cardService=new Lazy<CardService>(()=> new CardService(repositoryManager, loggerFactory.CreateLogger<CardService>()));
+            _budgetCategoryService = new Lazy<BudgetCategoryService>(() => new BudgetCategoryService(repositoryManager, loggerFactory.CreateLogger<BudgetCategoryService>()));
+            _transactionService = new Lazy<TransactionService>(() => new TransactionService(repositoryManager, loggerFactory.CreateLogger<TransactionService>()));
+            _userService=new Lazy<UserService>(()=> new UserService(userManager,signInManager, loggerFactory.CreateLogger<UserService>()));
         }
         public ITransactionService transactionService => _transactionService.Value;
 

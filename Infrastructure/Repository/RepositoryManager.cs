@@ -15,18 +15,16 @@ namespace BudgetApp.Infrastructure.Repository
     public class RepositoryManager : IRepositoryManager
     {
         private readonly RepositoryContext repositoryContext;
-        private  readonly ILogger _logger;
         private readonly Lazy<TransactionRepository> transactionRepository;
         private readonly Lazy<CardRepository> cardRepository;
         private readonly Lazy<BudgetCategoryRepository> categoryRepository;
-        public RepositoryManager(RepositoryContext context,ILogger logger )
+        public RepositoryManager(RepositoryContext context)
         {
             repositoryContext= context;
-            _logger= logger;
-            ///using lazy intialization to improver performance as repository only created when needed
-            transactionRepository= new Lazy<TransactionRepository>(()=>new TransactionRepository(context,_logger));
-            cardRepository= new Lazy<CardRepository>(()=>new CardRepository(context,_logger));
-            categoryRepository = new Lazy<BudgetCategoryRepository>(()=>new BudgetCategoryRepository(context,_logger));
+            ///using lazy intialization to improve performance as repository only created when needed
+            transactionRepository= new Lazy<TransactionRepository>(()=>new TransactionRepository(context));
+            cardRepository= new Lazy<CardRepository>(()=>new CardRepository(context));
+            categoryRepository = new Lazy<BudgetCategoryRepository>(()=>new BudgetCategoryRepository(context));
         }
 
         public ITransactionRepository TransactionRepository => transactionRepository.Value;

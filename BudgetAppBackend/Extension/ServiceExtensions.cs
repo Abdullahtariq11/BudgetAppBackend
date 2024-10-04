@@ -40,11 +40,12 @@ namespace BudgetApp.API.Extension
         /// Configure Serilog
         /// </summary>
 
+        //configure serilog using fluent method
         public static void ConfigureSerilog(this IHostBuilder host)
         {
             host.UseSerilog((context,configuration)=>{
-                 configuration.ReadFrom.Configuration(context.Configuration);
-                 //.MinimumLevel.Override("Microsoft",LogEventLevel.Warning);
+                 configuration.ReadFrom.Configuration(context.Configuration)
+                 .MinimumLevel.Override("Microsoft",LogEventLevel.Warning);
             });
         }
 

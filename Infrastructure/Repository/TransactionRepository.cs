@@ -14,7 +14,7 @@ namespace BudgetApp.Infrastructure.Repository
 {
     public class TransactionRepository : RepositoryBase<Transaction>, ITransactionRepository
     {
-        public TransactionRepository(RepositoryContext context,ILogger logger) : base(context,logger)
+        public TransactionRepository(RepositoryContext context) : base(context)
         {
         }
         public async Task<ICollection<Transaction>> GetAllAsync(TransactionParameter parameter, bool trackChanges)

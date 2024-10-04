@@ -6,6 +6,7 @@ using BudgetApp.Domain.Models;
 using BudgetApp.Shared.Dtos.UserDto;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Service.Service.Contracts;
 
 namespace Service.Service
@@ -13,11 +14,13 @@ namespace Service.Service
     public class UserService : IUserService
     {
         private readonly UserManager<User> _userManager;  
-        private readonly SignInManager<User> _signInManager;  
-        public UserService(UserManager<User> userManager,SignInManager<User> signInManager)
+        private readonly SignInManager<User> _signInManager;
+        private readonly ILogger _logger;
+        public UserService(UserManager<User> userManager,SignInManager<User> signInManager,ILogger<UserService>logger)
         {
             _userManager=userManager;
             _signInManager=signInManager;
+            _logger=logger;
         }
 
         public async Task<bool> Login(LoginDto loginDto)

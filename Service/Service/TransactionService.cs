@@ -9,15 +9,18 @@ using BudgetApp.Domain.Contracts;
 using BudgetApp.Domain.Models;
 using BudgetApp.Shared.Dtos.TransactionDto;
 using BudgetApp.Shared.RequestFeatures;
+using Microsoft.Extensions.Logging;
 
 namespace BudgetApp.Application.Service
 {
     public class TransactionService:ITransactionService
     {
         private readonly IRepositoryManager _repositoryManager;
-        public TransactionService(IRepositoryManager repositoryManager)
+        private readonly ILogger _logger;
+        public TransactionService(IRepositoryManager repositoryManager,ILogger<TransactionService> logger)
         {
             _repositoryManager = repositoryManager;
+            _logger = logger;
         }
 
         public async Task<ICollection<Transaction>> GetAllTransaction(TransactionParameter parameter,bool trackChanges)

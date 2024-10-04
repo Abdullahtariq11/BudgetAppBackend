@@ -15,7 +15,7 @@ namespace BudgetApp.Infrastructure.Repository
     public class BudgetCategoryRepository : RepositoryBase<BudgetCategory>, IBudgetCategoryRepository
     {
 
-        public BudgetCategoryRepository(RepositoryContext context,ILogger logger) : base(context,logger)
+        public BudgetCategoryRepository(RepositoryContext context) : base(context)
         {
         }
 

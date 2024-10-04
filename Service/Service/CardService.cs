@@ -7,15 +7,18 @@ using BudgetApp.Application.Service.Contracts;
 using BudgetApp.Domain.Contracts;
 using BudgetApp.Domain.Models;
 using BudgetApp.Shared.Dtos.CardDto;
+using Microsoft.Extensions.Logging;
 
 namespace BudgetApp.Application.Service
 {
     public class CardService : ICardService
     {
         private readonly IRepositoryManager _repositoryManager;
-        public CardService(IRepositoryManager repositoryManager)
+        private readonly ILogger _logger;
+        public CardService(IRepositoryManager repositoryManager, ILogger<CardService> logger)
         {
             _repositoryManager = repositoryManager;
+            _logger = logger;
         }
 
         public async Task<Card> CreateCardForUserAsync(string userId, CreatedCardDto card, bool trackChanges)

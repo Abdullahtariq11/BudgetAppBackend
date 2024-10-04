@@ -14,7 +14,7 @@ namespace Infrastructure.Repository
 {
     public class CardRepository : RepositoryBase<Card>,ICardRepository
     {
-        public CardRepository(RepositoryContext context,ILogger logger) : base(context,logger)
+        public CardRepository(RepositoryContext context) : base(context)
         {
         }
         public void CreateCard(string userId, Card card)

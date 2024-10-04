@@ -2,6 +2,8 @@ using BudgetApp.API.Extension;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+//Add logger service
+builder.Host.ConfigureSerilog();
 
 // Add services to the container.
 
@@ -9,11 +11,7 @@ builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigurePosgreSqlContext(builder.Configuration);
 builder.Services.AddControllers();
-    //Add logger service
-builder.Host.UseSerilog((context, configuration) =>
-{
-    configuration.ReadFrom.Configuration(context.Configuration);
-});
+
 
 builder.Services.AddCors(options =>
 {

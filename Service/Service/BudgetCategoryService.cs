@@ -7,23 +7,28 @@ using BudgetApp.Application.Service.Contracts;
 using BudgetApp.Domain.Contracts;
 using BudgetApp.Domain.Models;
 using BudgetApp.Shared.Dtos.BudgetCategoryDto;
+using Microsoft.Extensions.Logging;
 
 namespace BudgetApp.Application.Service
 {
     public class BudgetCategoryService:IBudgetCategoryService
     {
         private readonly IRepositoryManager _repositoryManager;
+        private readonly ILogger _logger;
 
-        public BudgetCategoryService(IRepositoryManager repositoryManager)
+        public BudgetCategoryService(IRepositoryManager repositoryManager,ILogger<BudgetCategoryService> logger)
           {
             _repositoryManager = repositoryManager;
+            _logger = logger;
         }
 
         public async Task<CreatedCategoryDto> CreateBudgetCategoryForUserAsync(string userId, CreatedCategoryDto budgetCategoryDto,bool trackChanges)
         {
             var budgets= await _repositoryManager.BudgetCategoryRepository.GetAllAsync(userId,trackChanges);
+
             if(budgets==null||budgetCategoryDto==null)
             {
+                _logger.LogWarning("Failed to create budget category for user {userId}- Invalid input",userId);
                 return null;
             }
             var budgetCategory = new BudgetCategory
