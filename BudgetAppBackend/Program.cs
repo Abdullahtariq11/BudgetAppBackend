@@ -1,9 +1,11 @@
 using BudgetApp.API.Extension;
-using Serilog;
+using NLog;
+using NLog.Web;
+
 
 var builder = WebApplication.CreateBuilder(args);
 //Add logger service
-builder.Host.ConfigureSerilog();
+LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
 // Add services to the container.
 
@@ -39,7 +41,7 @@ builder.Services.AddSwaggerGen(
     
 
 var app = builder.Build();
-app.UseSerilogRequestLogging();
+//app.UseSerilogRequestLogging();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

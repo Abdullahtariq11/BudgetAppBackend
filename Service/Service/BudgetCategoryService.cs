@@ -24,6 +24,8 @@ namespace BudgetApp.Application.Service
 
         public async Task<CreatedCategoryDto> CreateBudgetCategoryForUserAsync(string userId, CreatedCategoryDto budgetCategoryDto,bool trackChanges)
         {
+            _logger.LogInformation("Creating budget category for user {UserId}", userId);
+            
             var budgets= await _repositoryManager.BudgetCategoryRepository.GetAllAsync(userId,trackChanges);
 
             if(budgets==null||budgetCategoryDto==null)
