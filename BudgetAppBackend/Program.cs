@@ -1,4 +1,5 @@
 using BudgetApp.API.Extension;
+using BudgetAppBackend.Extension;
 using NLog;
 using NLog.Web;
 
@@ -36,7 +37,7 @@ builder.Services.AddSwaggerGen(
     });
     builder.Services.AddAuthentication();
     builder.Services.ConfigureIdentity();
-
+builder.Services.AddControllers().AddNewtonsoftJson();
 
     
 
@@ -49,6 +50,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<GlobalErrorHandlingMiddleware>();
+
 // Enable CORS
 app.UseCors(options =>
 {
