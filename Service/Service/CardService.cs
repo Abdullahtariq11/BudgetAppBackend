@@ -35,7 +35,10 @@ namespace BudgetApp.Application.Service
                 throw new BadRequestException("Data provided is not correct");
             }
 
-            Enum.TryParse(card.cardType, true, out CardType cardType);
+            if(!Enum.TryParse(card.cardType, true, out CardType cardType))
+            {
+                 throw new BadRequestException("Invalid card type");
+            }
             var newCard = new Card
             {
                CardName=card.CardName,

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BudgetApp.Application.Service.Contracts;
 using BudgetApp.Domain.Models;
 using BudgetApp.Shared.Dtos.BudgetCategoryDto;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetAppBackend.Controllers
@@ -22,53 +23,51 @@ namespace BudgetAppBackend.Controllers
         public async Task<IActionResult> GetCategoriesForUser(string userId)
         {
             var budgets = await _serviceManager.budgetCategoryService.GetBudgetCategoriesAsync(userId, trackChanges: false);
-            if (budgets == null)
-            {
-                return NotFound();
-            }
             return Ok(budgets);
         }
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetCategoryById(string userId, Guid id)
         {
             var budget = await _serviceManager.budgetCategoryService.GetBudgetCategoryByIdAsync(userId, id, trackChanges: false);
-            if (budget == null)
-            {
-                return NotFound();
-            }
             return Ok(budget);
         }
         [HttpPost]
         public async Task<IActionResult> CreateBudgetCategory(string userId, [FromBody] CreatedCategoryDto budgetCategorydto)
         {
-            var budget = await _serviceManager.budgetCategoryService.CreateBudgetCategoryForUserAsync(userId, budgetCategorydto, trackChanges: false);
-            if (budget == null)
+            if (budgetCategorydto == null)
             {
-                return NoContent();
+                throw new BadRequestException("BudgetCategory data is missing.");
             }
-            return Ok(budgetCategorydto);
+            if (!ModelState.IsValid)
+            {
+                throw new BadRequestException("BudgetCategory model is not valid");
+            }
+            var budget = await _serviceManager.budgetCategoryService.CreateBudgetCategoryForUserAsync(userId, budgetCategorydto, trackChanges: false);
+            return CreatedAtAction(nameof(GetCategoryById), new { userId, id = budget.id }, budget);
         }
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteBudgetCategory(string userId, Guid id)
         {
             var budget = await _serviceManager.budgetCategoryService.DeleteBudgetCategoryForUserAsync(userId, id);
-            if (budget == null)
-            {
-                return BadRequest("Not deleted");
-            }
-            return Ok(budget);
+
+            return NoContent();
 
         }
 
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateCategory(string userId, Guid id, CreatedCategoryDto budgetCategory)
         {
-            var budget = await _serviceManager.budgetCategoryService.UpdateBudgetCategoryForUserAsync(userId, id,budgetCategory,trackChanges:true);
-            if (budget == null)
+            if (budgetCategory == null)
             {
-                return BadRequest("Not updated");
+                throw new BadRequestException("Budget category data is missing.");
             }
-            return Ok(budget);
+            if (!ModelState.IsValid)
+            {
+                throw new BadRequestException("BudgetCategory model is not valid");
+            }
+            var budget = await _serviceManager.budgetCategoryService.UpdateBudgetCategoryForUserAsync(userId, id, budgetCategory, trackChanges: true);
+
+            return NoContent();
         }
 
 
