@@ -37,7 +37,7 @@ namespace BudgetApp.API.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var Createdtransaction=await _serviceManager.transactionService.CreateTransaction(userId,transaction);
-            return CreatedAtAction(nameof(CreateTransaction), transaction);
+            return CreatedAtAction(nameof(GetTransaction), new { userId, id = Createdtransaction.Id }, Createdtransaction);
         }
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteTransaction(string userId,Guid id)

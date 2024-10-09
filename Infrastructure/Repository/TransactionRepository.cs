@@ -50,18 +50,18 @@ namespace BudgetApp.Infrastructure.Repository
 
         }
 
-        public void CreateTransaction(Transaction transaction)
+        public async Task CreateTransaction(Transaction transaction)
         {
-             Create(transaction);
+             await Create(transaction);
 
         }
-        public  void UpdateTransaction(Transaction transaction)
+        public  async Task UpdateTransaction(Transaction transaction)
         {
-            Update(transaction);
+            await Update(transaction);
         }
-        public void DeleteTransaction(Transaction transaction)
+        public async Task DeleteTransaction(Transaction transaction)
         {
-            Delete(transaction);
+            await Delete(transaction);
         }
 
 

@@ -26,7 +26,7 @@ namespace BudgetApp.Application.Service
 
         public async Task<ICollection<Transaction>> GetAllTransaction(string userId, TransactionParameter parameter, bool trackChanges)
         {
-            _logger.LogInformation("Getting Transactions ");
+            _logger.LogInformation("Getting Transactions for user {userId}",userId);
 
             var transactions = await _repositoryManager.TransactionRepository.GetAllAsync(userId, parameter, trackChanges);
             if (transactions == null)
@@ -46,10 +46,14 @@ namespace BudgetApp.Application.Service
             }
             return transaction;
         }
-        public async Task<Transaction> CreateTransaction(string userId,TransactionDto transactionDto)
+        public async Task<Transaction> CreateTransaction(string userId, TransactionDto transactionDto)
         {
             _logger.LogInformation("Updating transaction for user {userId}", userId);
-            Enum.TryParse(transactionDto.transactionType, true, out TransactionType transactionType);
+
+            if (!Enum.TryParse(transactionDto.transactionType, true, out TransactionType transactionType))
+            {
+                throw new BadRequestException("Invalid transaction type");
+            }
             var transaction = new Transaction()
             {
                 Amount = transactionDto.amount,
@@ -59,7 +63,7 @@ namespace BudgetApp.Application.Service
                 Type = transactionType,
                 UserID = userId
             };
-            _repositoryManager.TransactionRepository.CreateTransaction(transaction);
+            await _repositoryManager.TransactionRepository.CreateTransaction(transaction);
             _repositoryManager.Save();
             return transaction;
         }
@@ -74,7 +78,7 @@ namespace BudgetApp.Application.Service
             }
 
             transaction.Id = transactionRetrieved.Id;
-            _repositoryManager.TransactionRepository.UpdateTransaction(transaction);
+            await _repositoryManager.TransactionRepository.UpdateTransaction(transaction);
             _repositoryManager.Save();
             return transaction;
 
@@ -90,7 +94,7 @@ namespace BudgetApp.Application.Service
                 throw new NotFoundException($"Transaction with id {transactionId} not found for user {userId}");
             }
 
-            _repositoryManager.TransactionRepository.DeleteTransaction(transaction);
+            await _repositoryManager.TransactionRepository.DeleteTransaction(transaction);
             _repositoryManager.Save();
             return transaction;
         }
