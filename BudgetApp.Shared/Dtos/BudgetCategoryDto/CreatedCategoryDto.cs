@@ -5,6 +5,6 @@ using System.Threading.Tasks;
 
 namespace BudgetApp.Shared.Dtos.BudgetCategoryDto
 {
-    public record CreatedCategoryDto(decimal allocatedAmount, decimal remainingAmount, DateTime lastUpdated,string categoryName);
+    public record CreatedCategoryDto(Guid id,decimal allocatedAmount, decimal remainingAmount, DateTime lastUpdated,string categoryName);
 
 }

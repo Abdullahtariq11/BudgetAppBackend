@@ -33,9 +33,10 @@ namespace BudgetApp.Infrastructure.Repository
             await _context.Set<T>().AddAsync(entity);
         }
 
-        public void Delete(T entity)
+        public  Task Delete(T entity)
         {
-            _context.Set<T>().Remove(entity);
+             _context.Set<T>().Remove(entity);
+             return Task.CompletedTask;
 
         }
 
@@ -50,9 +51,13 @@ namespace BudgetApp.Infrastructure.Repository
             return !trackChanges ? _context.Set<T>().Where(expression).AsNoTracking() : _context.Set<T>().Where(expression);
         }
 
-        public void Update(T entity)
+        //Since it doesnt need to return anything we can return task completed to make code readibility and consitency better 
+        //although code act synchronously
+        public  Task Update(T entity)
         {
-            _context.Set<T>().Update(entity);
+             _context.Set<T>().Update(entity);
+             return Task.CompletedTask;
+            
         }
     }
 }

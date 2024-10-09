@@ -17,9 +17,9 @@ namespace BudgetApp.Infrastructure.Repository
         public TransactionRepository(RepositoryContext context) : base(context)
         {
         }
-        public async Task<ICollection<Transaction>> GetAllAsync(TransactionParameter parameter, bool trackChanges)
+        public async Task<ICollection<Transaction>> GetAllAsync(string userId, TransactionParameter parameter, bool trackChanges)
         {
-            IQueryable<Transaction> query = FindAll(trackChanges);
+            IQueryable<Transaction> query = (IQueryable<Transaction>)await FindByCondition(u => u.UserID.Equals(userId), trackChanges).ToListAsync();
 
             if (parameter.HasValidFilter())
             {
@@ -43,23 +43,25 @@ namespace BudgetApp.Infrastructure.Repository
                 .OrderBy(t => t.Category)
                 .ToListAsync();
         }
-        public async Task<Transaction> GetByIdAsync(Guid transactionId, bool trackChanges)
+        public async Task<Transaction> GetByIdAsync(string userId, Guid transactionId, bool trackChanges)
         {
-            return await FindByCondition(t => t.Id.Equals(transactionId), trackChanges).SingleOrDefaultAsync();
-        }
 
-        public void CreateTransaction(Transaction transaction)
-        {
-            Create(transaction);
+            return await FindByCondition(u => u.UserID == userId && u.Id == transactionId, trackChanges).SingleOrDefaultAsync();
 
         }
-        public void UpdateTransaction(Transaction transaction)
+
+        public async Task CreateTransaction(Transaction transaction)
         {
-            Update(transaction);
+             await Create(transaction);
+
         }
-        public void DeleteTransaction(Transaction transaction)
+        public  async Task UpdateTransaction(Transaction transaction)
         {
-            Delete(transaction);
+            await Update(transaction);
+        }
+        public async Task DeleteTransaction(Transaction transaction)
+        {
+            await Delete(transaction);
         }
 
 
