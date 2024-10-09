@@ -25,6 +25,7 @@ namespace Service.Service
 
         public async Task<bool> Login(LoginDto loginDto)
         {
+            _logger.LogInformation("Logging in");
             var result = await _signInManager.PasswordSignInAsync(loginDto.Username, loginDto.Password,
             loginDto.RememberMe,lockoutOnFailure:false);
             if (!result.Succeeded)
@@ -37,6 +38,7 @@ namespace Service.Service
 
         public async Task<ICollection<CreatedUserDto>> GetAllUser()
         {
+            _logger.LogInformation("Getting All the users");
             var users=await _userManager.Users.AsNoTracking().ToListAsync();
             var userDtos=new List<CreatedUserDto>();
             foreach (var user in users)
@@ -49,6 +51,7 @@ namespace Service.Service
 
         public async Task<IdentityResult> RegisterUser(RegisterationDto registerationDto)
         {
+            _logger.LogInformation("Registering User");
             var user=new User
             {
                 FirstName=registerationDto.FirstName,
@@ -67,6 +70,7 @@ namespace Service.Service
 
         public async Task<bool> DeleteUser(string userId)
         {
+            _logger.LogInformation("Deleting User");
             var user = await _userManager.Users.AsNoTracking().FirstOrDefaultAsync(u=>u.Id == userId);
             if (user == null)
             {

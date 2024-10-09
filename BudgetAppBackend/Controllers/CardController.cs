@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BudgetAppBackend.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/Users/{userId}/[controller]")]
     public class CardController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetApp.API.Controllers
 {
-    [Route("api/Users/transactions")]
+    [Route("api/Users/{userId}/transactions")]
     [ApiController]
     public class TransactionController : ControllerBase
     {
@@ -19,39 +19,37 @@ namespace BudgetApp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTransactions([FromQuery] TransactionParameter parameter )
+        public async Task<IActionResult> GetTransactions([FromQuery] TransactionParameter parameter ,string userId)
         {
-            var transactions= await _serviceManager.transactionService.GetAllTransaction(parameter,trackChanges:false);
-            if (transactions == null) return NotFound();
+
+            var transactions= await _serviceManager.transactionService.GetAllTransaction(userId,parameter,trackChanges:false);
             return Ok(transactions);
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetTransaction([FromRoute]Guid id)
+        public async Task<IActionResult> GetTransaction(string userId,[FromRoute]Guid id)
         {
-            var transaction= await _serviceManager.transactionService.GetTransactionById(id,trackChanges:false);
-            if (transaction == null) return NotFound();
+            var transaction= await _serviceManager.transactionService.GetTransactionById(userId,id,trackChanges:false);
             return Ok(transaction);
         }
         [HttpPost]
-        public  IActionResult CreateTransaction([FromBody] TransactionDto transaction)
+        public async Task< IActionResult> CreateTransaction(string userId,[FromBody] TransactionDto transaction)
         {
-            if(transaction == null) return NoContent();
-            _serviceManager.transactionService.CreateTransaction(transaction);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var Createdtransaction=await _serviceManager.transactionService.CreateTransaction(userId,transaction);
             return CreatedAtAction(nameof(CreateTransaction), transaction);
         }
         [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> DeleteTransaction(Guid id)
+        public async Task<IActionResult> DeleteTransaction(string userId,Guid id)
         {
-            var transaction=await _serviceManager.transactionService.DeleteTransaction(id, trackChanges:false);
-            if (transaction == null) return NotFound();
+            var transaction=await _serviceManager.transactionService.DeleteTransaction(userId,id, trackChanges:false);
             return NoContent();
         }
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> UpdateTransaction(Guid id, [FromBody] Transaction transaction)
+        public async Task<IActionResult> UpdateTransaction(string userId,Guid id, [FromBody] Transaction transaction)
         {
-            var transactionRetrieved=await _serviceManager.transactionService.UpdateTransaction(id,transaction,trackChanges:false);
-            if(transactionRetrieved == null) return BadRequest();
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var transactionRetrieved=await _serviceManager.transactionService.UpdateTransaction(userId,id,transaction,trackChanges:false);
             return NoContent();
         }
     }

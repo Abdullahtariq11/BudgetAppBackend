@@ -28,9 +28,9 @@ namespace BudgetApp.Infrastructure.Repository
         }
 
 
-        public async Task Create(T entity)
+        public void Create(T entity)
         {
-            await _context.Set<T>().AddAsync(entity);
+             _context.Set<T>().AddAsync(entity);
         }
 
         public void Delete(T entity)
