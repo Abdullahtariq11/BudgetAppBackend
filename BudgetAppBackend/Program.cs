@@ -1,5 +1,6 @@
 using BudgetApp.API.Extension;
 using BudgetAppBackend.Extension;
+using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
 
@@ -26,20 +27,42 @@ builder.Services.AddCors(options =>
 
 //Add Swagger services
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(
-    c =>
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
+        In = ParameterLocation.Header,
+        Description = "Please enter token with 'Bearer' scheme",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+    {
+        new OpenApiSecurityScheme
+        {
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+            }
+        },
+        
+        new string[] { }
+    }});
         c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
         {
             Title = "Budget Api",
-            Version= "v1"
+            Version = "v1"
         });
-    });
-    builder.Services.AddAuthentication();
-    builder.Services.ConfigureIdentity();
-builder.Services.AddControllers().AddNewtonsoftJson();
+});
 
-    
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();
+builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.ConfigureJWT(builder.Configuration);
+
+
 
 var app = builder.Build();
 //app.UseSerilogRequestLogging();
