@@ -1,11 +1,15 @@
-﻿using BudgetApp.Application.Service;
+﻿using System.Text;
+using BudgetApp.Application.Service;
 using BudgetApp.Application.Service.Contracts;
 using BudgetApp.Domain.Contracts;
 using BudgetApp.Domain.Models;
 using BudgetApp.Infrastructure;
 using BudgetApp.Infrastructure.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Events;
@@ -46,6 +50,32 @@ namespace BudgetApp.API.Extension
             host.UseSerilog((context,configuration)=>{
                  configuration.ReadFrom.Configuration(context.Configuration)
                  .MinimumLevel.Override("Microsoft",LogEventLevel.Warning);
+            });
+        }
+
+        /// <summary>
+        /// Configure JWT token
+        /// </summary>
+
+        public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddAuthentication(options=>{
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options=>
+            {
+                options.TokenValidationParameters=new TokenValidationParameters
+                {
+                    ValidateIssuer=true,
+                    ValidateAudience=true,
+                    ValidateLifetime=true,
+                    ValidateIssuerSigningKey=true,
+                    ValidIssuer=configuration["JWT:Issuer"],
+                    ValidAudience=configuration["JWT:Audience"],
+                    IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Key"]))
+
+                };
             });
         }
 

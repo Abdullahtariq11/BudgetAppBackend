@@ -10,9 +10,10 @@ namespace Service.Service.Contracts
 {
     public interface IUserService
     {
+        public Task<string> GenerateJwtToken(User user);
         public Task<IdentityResult> RegisterUser(RegisterationDto registerationDto);
         public Task<ICollection<CreatedUserDto>> GetAllUser();
-        public Task<bool> Login(LoginDto loginDto);
+        public Task<string> Login(LoginDto loginDto);
         public Task<bool> DeleteUser(string userId);
     }
 }
