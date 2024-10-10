@@ -67,12 +67,18 @@ builder.Services.ConfigureJWT(builder.Configuration);
 var app = builder.Build();
 //app.UseSerilogRequestLogging();
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    //enable swagger middleware
+
+    // Enable Swagger middleware
     app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+    // Set Swagger as the default homepage
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Budget API v1");
+        c.RoutePrefix = string.Empty;  // This makes Swagger the default home page
+    });
+
+
 app.UseMiddleware<GlobalErrorHandlingMiddleware>();
 
 // Enable CORS
