@@ -6,12 +6,14 @@ using BudgetApp.Application.Service.Contracts;
 using BudgetApp.Domain.Models;
 using BudgetApp.Shared.Dtos.CardDto;
 using Domain.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetAppBackend.Controllers
 {
     [ApiController]
-    [Route("api/Users/{userId}/[controller]")]
+    [Authorize]
+    [Route("api/Users/[controller]")]
     public class CardController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
@@ -20,20 +22,23 @@ namespace BudgetAppBackend.Controllers
             _serviceManager = serviceManager;
         }
         [HttpGet]
-        public async Task<IActionResult> GetCardsForUser(string userId)
+        public async Task<IActionResult> GetCardsForUser()
         {
+            var userId = User.FindFirst("Id")?.Value;
             var cards = await _serviceManager.cardService.GetCardAsync(userId, trackChanges: false);
             return Ok(cards);
         }
         [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetCardById(string userId, Guid id)
+        public async Task<IActionResult> GetCardById( Guid id)
         {
+            var userId = User.FindFirst("Id")?.Value;
             var card = await _serviceManager.cardService.GetCardByIdAsync(userId, id, trackChanges: false);
             return Ok(card);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateCard(string userId, [FromBody] CreatedCardDto newCard)
+        public async Task<IActionResult> CreateCard( [FromBody] CreatedCardDto newCard)
         {
+            var userId = User.FindFirst("Id")?.Value;
             if (newCard == null)
             {
                 throw new BadRequestException("Card data is missing.");
@@ -46,16 +51,18 @@ namespace BudgetAppBackend.Controllers
             return CreatedAtAction(nameof(GetCardById), new { userId, id = card.Id}, card);
         }
         [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> DeleteCard(string userId, Guid id)
+        public async Task<IActionResult> DeleteCard(Guid id)
         {
+            var userId = User.FindFirst("Id")?.Value;
             var card = await _serviceManager.cardService.DeleteCardForUserAsync(userId, id);
             return NoContent();
 
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> UpdateCard(string userId, Guid id, CreatedCardDto updatedCard)
+        public async Task<IActionResult> UpdateCard( Guid id, CreatedCardDto updatedCard)
         {
+            var userId = User.FindFirst("Id")?.Value;
             if (updatedCard == null)
             {
                 throw new BadRequestException("Card data is missing.");

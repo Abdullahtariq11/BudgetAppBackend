@@ -25,6 +25,7 @@ namespace BudgetApp.Application.Service
 
         public async Task<CreatedCategoryDto> CreateBudgetCategoryForUserAsync(string userId, CreatedCategoryDto budgetCategoryDto, bool trackChanges)
         {
+           
             _logger.LogInformation("Budget category {CategoryName} created for user {UserId}", budgetCategoryDto.categoryName, userId);
 
             var budgets = await _repositoryManager.BudgetCategoryRepository.GetAllAsync(userId, trackChanges);
@@ -63,6 +64,7 @@ namespace BudgetApp.Application.Service
 
         public async Task<ICollection<BudgetCategory>> GetBudgetCategoriesAsync(string userId, bool trackChanges)
         {
+           
             var budgets = await _repositoryManager.BudgetCategoryRepository.GetAllAsync(userId, trackChanges);
             return budgets;
         }

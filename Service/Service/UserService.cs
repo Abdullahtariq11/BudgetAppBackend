@@ -37,6 +37,7 @@ namespace Service.Service
             {
                 new Claim(ClaimTypes.Name, user.UserName),                // Username
                 new Claim(ClaimTypes.NameIdentifier, user.Id),            // UserID
+                 new Claim("Id", user.Id),
                 new Claim("FirstName", user.FirstName),                   // First Name
                 new Claim("LastName", user.LastName)                      // Last Name
             };

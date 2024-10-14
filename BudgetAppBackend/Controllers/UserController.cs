@@ -59,9 +59,10 @@ namespace BudgetAppBackend.Controllers
         {
             var firstName = User.FindFirst("FirstName")?.Value;
             var lastName = User.FindFirst("LastName")?.Value;
+            var id = User.FindFirst("Id")?.Value;
             var username = User.Identity.Name; // This gives the username as it is ClaimTypes.Name
 
-            return Ok(new { FirstName = firstName, LastName = lastName, Username = username });
+            return Ok(new { Id=id,FirstName = firstName, LastName = lastName, Username = username });
         }
 
         [Authorize(Roles = "Admin")]

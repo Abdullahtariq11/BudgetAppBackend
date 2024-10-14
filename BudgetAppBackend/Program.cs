@@ -47,14 +47,14 @@ builder.Services.AddSwaggerGen(c =>
                 Id = "Bearer"
             }
         },
-        
+
         new string[] { }
     }});
-        c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-        {
-            Title = "Budget Api",
-            Version = "v1"
-        });
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Budget Api",
+        Version = "v1"
+    });
 });
 
 builder.Services.AddAuthentication();
@@ -65,9 +65,14 @@ builder.Services.ConfigureJWT(builder.Configuration);
 
 
 var app = builder.Build();
-//app.UseSerilogRequestLogging();
-// Configure the HTTP request pipeline.
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+else
+{
     // Enable Swagger middleware
     app.UseSwagger();
 
@@ -77,6 +82,8 @@ var app = builder.Build();
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Budget API v1");
         c.RoutePrefix = string.Empty;  // This makes Swagger the default home page
     });
+}
+//app.UseSerilogRequestLogging();
 
 
 app.UseMiddleware<GlobalErrorHandlingMiddleware>();

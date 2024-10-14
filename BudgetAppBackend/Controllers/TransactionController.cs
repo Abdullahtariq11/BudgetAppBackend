@@ -4,11 +4,13 @@ using BudgetApp.Domain.Models;
 using BudgetApp.Shared.Dtos.TransactionDto;
 using BudgetApp.Shared.RequestFeatures;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetApp.API.Controllers
 {
-    [Route("api/Users/{userId}/transactions")]
+    [Route("api/Users/transactions")]
+    [Authorize]
     [ApiController]
     public class TransactionController : ControllerBase
     {
@@ -20,8 +22,9 @@ namespace BudgetApp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTransactions([FromQuery] TransactionParameter parameter, string userId)
+        public async Task<IActionResult> GetTransactions([FromQuery] TransactionParameter parameter)
         {
+            var userId = User.FindFirst("Id")?.Value;
             var tokenUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (tokenUserId != userId)
             {
@@ -32,8 +35,9 @@ namespace BudgetApp.API.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetTransaction(string userId, [FromRoute] Guid id)
+        public async Task<IActionResult> GetTransaction( [FromRoute] Guid id)
         {
+            var userId = User.FindFirst("Id")?.Value;
             var tokenUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (tokenUserId != userId)
             {
@@ -43,8 +47,9 @@ namespace BudgetApp.API.Controllers
             return Ok(transaction);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateTransaction(string userId, [FromBody] TransactionDto transaction)
+        public async Task<IActionResult> CreateTransaction([FromBody] TransactionDto transaction)
         {
+            var userId = User.FindFirst("Id")?.Value;
             var tokenUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (tokenUserId != userId)
             {
@@ -55,8 +60,9 @@ namespace BudgetApp.API.Controllers
             return CreatedAtAction(nameof(GetTransaction), new { userId, id = createdtransaction.Id }, createdtransaction);
         }
         [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> DeleteTransaction(string userId, Guid id)
+        public async Task<IActionResult> DeleteTransaction(Guid id)
         {
+            var userId = User.FindFirst("Id")?.Value;
             var tokenUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (tokenUserId != userId)
             {
@@ -66,8 +72,9 @@ namespace BudgetApp.API.Controllers
             return NoContent();
         }
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> UpdateTransaction(string userId, Guid id, [FromBody] Transaction transaction)
+        public async Task<IActionResult> UpdateTransaction(Guid id, [FromBody] Transaction transaction)
         {
+            var userId = User.FindFirst("Id")?.Value;
             var tokenUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (tokenUserId != userId)
             {

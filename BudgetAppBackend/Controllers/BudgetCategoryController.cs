@@ -6,12 +6,14 @@ using BudgetApp.Application.Service.Contracts;
 using BudgetApp.Domain.Models;
 using BudgetApp.Shared.Dtos.BudgetCategoryDto;
 using Domain.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetAppBackend.Controllers
 {
     [ApiController]
-    [Route("api/Users/{userId}/BudgetCategories")]
+    [Authorize]
+    [Route("api/Users/BudgetCategories")]
     public class BudgetCategoryController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
@@ -19,21 +21,25 @@ namespace BudgetAppBackend.Controllers
         {
             _serviceManager = serviceManager;
         }
+
         [HttpGet]
-        public async Task<IActionResult> GetCategoriesForUser(string userId)
+        public async Task<IActionResult> GetCategoriesForUser()
         {
+            var userId = User.FindFirst("Id")?.Value;
             var budgets = await _serviceManager.budgetCategoryService.GetBudgetCategoriesAsync(userId, trackChanges: false);
             return Ok(budgets);
         }
         [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetCategoryById(string userId, Guid id)
+        public async Task<IActionResult> GetCategoryById(Guid id)
         {
+            var userId = User.FindFirst("Id")?.Value;
             var budget = await _serviceManager.budgetCategoryService.GetBudgetCategoryByIdAsync(userId, id, trackChanges: false);
             return Ok(budget);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateBudgetCategory(string userId, [FromBody] CreatedCategoryDto budgetCategorydto)
+        public async Task<IActionResult> CreateBudgetCategory( [FromBody] CreatedCategoryDto budgetCategorydto)
         {
+            var userId = User.FindFirst("Id")?.Value;
             if (budgetCategorydto == null)
             {
                 throw new BadRequestException("BudgetCategory data is missing.");
@@ -46,8 +52,9 @@ namespace BudgetAppBackend.Controllers
             return CreatedAtAction(nameof(GetCategoryById), new { userId, id = budget.id }, budget);
         }
         [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> DeleteBudgetCategory(string userId, Guid id)
+        public async Task<IActionResult> DeleteBudgetCategory( Guid id)
         {
+            var userId = User.FindFirst("Id")?.Value;
             var budget = await _serviceManager.budgetCategoryService.DeleteBudgetCategoryForUserAsync(userId, id);
 
             return NoContent();
@@ -55,8 +62,9 @@ namespace BudgetAppBackend.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> UpdateCategory(string userId, Guid id, CreatedCategoryDto budgetCategory)
+        public async Task<IActionResult> UpdateCategory( Guid id, CreatedCategoryDto budgetCategory)
         {
+            var userId = User.FindFirst("Id")?.Value;
             if (budgetCategory == null)
             {
                 throw new BadRequestException("Budget category data is missing.");
