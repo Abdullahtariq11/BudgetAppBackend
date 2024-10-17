@@ -14,6 +14,8 @@ namespace BudgetApp.Domain.Models
         [Column("CardId")]
         public Guid Id { get; set; } = Guid.NewGuid();
         public CardType cardType { get; set; } // e.g., Debit, Credit
+        // Card subtype: Savings, Chequing (for Debit cards only)
+        public SubCardType? subCardType { get; set; } // Nullable because it only applies for Debit cards
 
         [Required(ErrorMessage = "Card name is required")]
         public required string CardName { get; set; } 
@@ -36,4 +38,11 @@ namespace BudgetApp.Domain.Models
         Debit,
         Credit
     }
+    public enum SubCardType
+    {
+        None=0,
+        Savings=1,
+        Chequing=2
+    }
+    
 }
