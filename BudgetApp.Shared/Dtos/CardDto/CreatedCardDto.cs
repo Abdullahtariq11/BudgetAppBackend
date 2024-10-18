@@ -5,6 +5,6 @@ using System.Threading.Tasks;
 
 namespace BudgetApp.Shared.Dtos.CardDto
 {
-    public record CreatedCardDto(string CardName,decimal Balance,decimal AvailableBalance,decimal TotalCreditLimit,string cardType);
+    public record CreatedCardDto(Guid Id,string CardName,decimal? Balance,decimal? AvailableBalance,decimal? TotalCreditLimit,string? cardType,string? subCardType);
 
 }
