@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BudgetApp.Infrastructure.Configuration
 {
-    public class TransactionConfiguration:IEntityTypeConfiguration<Transaction>
+    public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
     {
         public void Configure(EntityTypeBuilder<Transaction> builder)
         {
@@ -25,9 +25,17 @@ namespace BudgetApp.Infrastructure.Configuration
                    .HasForeignKey(t => t.CardId)
                    .OnDelete(DeleteBehavior.SetNull);
 
+            // Configure relationship between Transaction and budgetCategory
+            builder.HasOne(t => t.BudgetCategory)
+                   .WithMany(bc => bc.Transactions)
+                   .HasForeignKey(t => t.BudgetCategoryId)
+                   .OnDelete(DeleteBehavior.SetNull);
+
             // Seed data for Transactions
+            /*
             var userId = "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4"; // Use the correct user ID
             var cardId = "54e0c90e-1e91-42d1-8d24-8e00fa63ec0b"; // Use correct card ID
+            //var budgetCategoryId = "c52f7b85-4d5e-4b0e-9497-9c6f91b8c9d1"; // Use a correct or existing budget category ID
             builder.HasData(
                 new Transaction
                 {
@@ -38,7 +46,8 @@ namespace BudgetApp.Infrastructure.Configuration
                     Description = "Weekly groceries",
                     TransactionDate = DateTime.UtcNow,
                     UserID = userId,
-                    CardId = Guid.Parse(cardId)
+                    CardId = Guid.Parse(cardId),
+                    BudgetCategoryId = null // This can be set to null if optional
                 },
                 new Transaction
                 {
@@ -49,9 +58,10 @@ namespace BudgetApp.Infrastructure.Configuration
                     Description = "Web development project",
                     TransactionDate = DateTime.UtcNow,
                     UserID = userId,
-                    CardId = Guid.Parse(cardId)
+                    CardId = Guid.Parse(cardId),
+                    BudgetCategoryId = null // Budget category is not mandatory here
                 }
-            );
+            );*/
         }
     }
 }

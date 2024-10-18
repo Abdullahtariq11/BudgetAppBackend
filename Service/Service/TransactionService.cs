@@ -24,9 +24,46 @@ namespace BudgetApp.Application.Service
             _logger = logger;
         }
 
+        public async Task updateBalance(decimal transactionAmount, Guid cardId, TransactionType transactionType, Guid? budgetCategoryId, string userId)
+        {
+            var card = await _repositoryManager.CardRepository.GetByIdAsync(userId, cardId, trackChanges: true);
+            if (card == null)
+            {
+                throw new NotFoundException($"card with id {cardId} not found for user {userId}");
+            }
+            BudgetCategory budgetCategory = null;
+            if (budgetCategoryId.HasValue && budgetCategoryId != Guid.Empty)
+            {
+                budgetCategory = await _repositoryManager.BudgetCategoryRepository.GetByIdAsync(userId, budgetCategoryId.Value, trackChanges: true);
+                if (budgetCategory == null)
+                {
+                    _logger.LogWarning("Budget category with id {BudgetCategoryId} not found for user {UserId}", budgetCategoryId, userId);
+
+                }
+            }
+
+            // Update card and budget category balances
+            var adjustment = transactionType == TransactionType.Income ? transactionAmount : -transactionAmount;
+            card.Balance += adjustment;
+            if (budgetCategory != null)
+            {
+                budgetCategory.RemainingAmount += adjustment;
+            }
+
+            // Save the changes
+            _repositoryManager.CardRepository.UpdateCard(userId, card);
+            if (budgetCategory != null)
+            {
+                _repositoryManager.BudgetCategoryRepository.UpdateBudgetCategory(userId, budgetCategory);
+            }
+
+            _repositoryManager.Save();
+
+        }
+
         public async Task<ICollection<Transaction>> GetAllTransaction(string userId, TransactionParameter parameter, bool trackChanges)
         {
-            _logger.LogInformation("Getting Transactions for user {userId}",userId);
+            _logger.LogInformation("Getting Transactions for user {userId}", userId);
 
             var transactions = await _repositoryManager.TransactionRepository.GetAllAsync(userId, parameter, trackChanges);
             if (transactions == null)
@@ -54,6 +91,7 @@ namespace BudgetApp.Application.Service
             {
                 throw new BadRequestException("Invalid transaction type");
             }
+
             var transaction = new Transaction()
             {
                 Amount = transactionDto.amount,
@@ -61,8 +99,11 @@ namespace BudgetApp.Application.Service
                 Description = transactionDto.description,
                 Category = transactionDto.category,
                 Type = transactionType,
-                UserID = userId
+                UserID = userId,
+                CardId = transactionDto.cardId,
+                BudgetCategoryId = transactionDto.BudgetCategoryId,
             };
+            await updateBalance(transactionDto.amount, transactionDto.cardId, transactionType, transactionDto.BudgetCategoryId, userId);
             await _repositoryManager.TransactionRepository.CreateTransaction(transaction);
             _repositoryManager.Save();
             return transaction;
@@ -77,11 +118,24 @@ namespace BudgetApp.Application.Service
                 throw new NotFoundException($"Transaction with id {transactionId} not found for user {userId}");
             }
 
+            // Check if there's a change in amount, type, or budget category
+            bool isAmountChanged = transactionRetrieved.Amount != transaction.Amount;
+            bool isTypeChanged = transactionRetrieved.Type != transaction.Type;
+            bool isCategoryChanged = transactionRetrieved.BudgetCategoryId != transaction.BudgetCategoryId;
+
+            // If there are any changes, reverse the original transaction's impact first
+            if (isAmountChanged || isTypeChanged || isCategoryChanged)
+            {
+                // Reverse the original transaction's effect
+                await updateBalance(-transactionRetrieved.Amount, transactionRetrieved.CardId, transactionRetrieved.Type, transactionRetrieved.BudgetCategoryId, userId);
+
+                // Apply the new transaction's effect
+                await updateBalance(transaction.Amount, transaction.CardId, transaction.Type, transaction.BudgetCategoryId, userId);
+            }
             transaction.Id = transactionRetrieved.Id;
             await _repositoryManager.TransactionRepository.UpdateTransaction(transaction);
             _repositoryManager.Save();
             return transaction;
-
 
         }
 
@@ -94,6 +148,7 @@ namespace BudgetApp.Application.Service
                 throw new NotFoundException($"Transaction with id {transactionId} not found for user {userId}");
             }
 
+             await updateBalance(-transaction.Amount, transaction.CardId, transaction.Type, transaction.BudgetCategoryId, userId);
             await _repositoryManager.TransactionRepository.DeleteTransaction(transaction);
             _repositoryManager.Save();
             return transaction;

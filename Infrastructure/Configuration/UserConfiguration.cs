@@ -45,7 +45,8 @@ namespace BudgetApp.Infrastructure.Configuration
                 EmailConfirmed = true,
                 FirstName = "Abdullah",
                 LastName = "Tariq",
-                PasswordHash = new PasswordHasher<User>().HashPassword(null, "Sameen11.")
+                PasswordHash = new PasswordHasher<User>().HashPassword(null, "Sameen11."),
+                
             };
             builder.HasData(user);
         }

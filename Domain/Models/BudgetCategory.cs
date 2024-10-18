@@ -20,6 +20,9 @@ namespace BudgetApp.Domain.Models
         [Required(ErrorMessage = "Category Name value is required")]
         public string? CategoryName { get; set; }
 
+                // Transactions associated with this card
+        public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+
 
         [Required(ErrorMessage = "userId is required")]
         public string? UserID { get; set; }

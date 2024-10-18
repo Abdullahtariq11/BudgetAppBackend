@@ -35,11 +35,13 @@ namespace BudgetApp.Domain.Models
         public string? UserID { get; set; }
         public User? User { get; set; }
 
-        
-        public Guid? CardId { get; set; }
+
+        public Guid CardId { get; set; }
         public Card? Card { get; set; }
 
-
+        
+        public Guid? BudgetCategoryId { get; set; }
+        public BudgetCategory? BudgetCategory { get; set; }
 
     }
     public enum TransactionType
@@ -47,4 +49,5 @@ namespace BudgetApp.Domain.Models
         Income,
         Expense
     }
+
 }

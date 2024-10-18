@@ -51,26 +51,6 @@ namespace BudgetApp.Infrastructure.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("BudgetCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("e7464c74-478b-4081-b4cc-fcf71d563a8c"),
-                            AllocatedAmount = 500m,
-                            CategoryName = "Groceries",
-                            LastUpdated = new DateTime(2024, 10, 17, 3, 40, 55, 815, DateTimeKind.Utc).AddTicks(3520),
-                            RemainingAmount = 0m,
-                            UserID = "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4"
-                        },
-                        new
-                        {
-                            Id = new Guid("7ef4c015-253c-4aed-b053-3742eb5db660"),
-                            AllocatedAmount = 200m,
-                            CategoryName = "Entertainment",
-                            LastUpdated = new DateTime(2024, 11, 17, 3, 40, 55, 815, DateTimeKind.Utc).AddTicks(3530),
-                            RemainingAmount = 0m,
-                            UserID = "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4"
-                        });
                 });
 
             modelBuilder.Entity("BudgetApp.Domain.Models.Card", b =>
@@ -108,26 +88,6 @@ namespace BudgetApp.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Cards");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("54e0c90e-1e91-42d1-8d24-8e00fa63ec0b"),
-                            Balance = 1000m,
-                            CardName = "Debit Card",
-                            UserId = "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4",
-                            cardType = 0
-                        },
-                        new
-                        {
-                            Id = new Guid("abf2b781-ea45-4d36-b5f7-3c6fd7e4bdf7"),
-                            AvailableBalance = 2000m,
-                            Balance = -500m,
-                            CardName = "Credit Card",
-                            TotalCreditLimit = 2500m,
-                            UserId = "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4",
-                            cardType = 1
-                        });
                 });
 
             modelBuilder.Entity("BudgetApp.Domain.Models.Transaction", b =>
@@ -140,7 +100,10 @@ namespace BudgetApp.Infrastructure.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
-                    b.Property<Guid?>("CardId")
+                    b.Property<Guid?>("BudgetCategoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CardId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Category")
@@ -163,35 +126,13 @@ namespace BudgetApp.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BudgetCategoryId");
+
                     b.HasIndex("CardId");
 
                     b.HasIndex("UserID");
 
                     b.ToTable("Transactions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("dad18e95-30cc-494b-a728-b9f05d17e132"),
-                            Amount = 200m,
-                            CardId = new Guid("54e0c90e-1e91-42d1-8d24-8e00fa63ec0b"),
-                            Category = "Groceries",
-                            Description = "Weekly groceries",
-                            TransactionDate = new DateTime(2024, 10, 17, 3, 40, 55, 815, DateTimeKind.Utc).AddTicks(3860),
-                            Type = 1,
-                            UserID = "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4"
-                        },
-                        new
-                        {
-                            Id = new Guid("8e2deff2-88e0-4c7a-8e93-e127fc7f7dba"),
-                            Amount = 500m,
-                            CardId = new Guid("54e0c90e-1e91-42d1-8d24-8e00fa63ec0b"),
-                            Category = "Freelance",
-                            Description = "Web development project",
-                            TransactionDate = new DateTime(2024, 10, 17, 3, 40, 55, 815, DateTimeKind.Utc).AddTicks(3870),
-                            Type = 0,
-                            UserID = "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4"
-                        });
                 });
 
             modelBuilder.Entity("BudgetApp.Domain.Models.User", b =>
@@ -270,7 +211,7 @@ namespace BudgetApp.Infrastructure.Migrations
                         {
                             Id = "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4a8c680f-aec9-426f-917d-f39d9853eddf",
+                            ConcurrencyStamp = "62c03d65-7850-482d-98c6-150c4c322464",
                             Email = "abdullahtariq096@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Abdullah",
@@ -278,9 +219,9 @@ namespace BudgetApp.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ABDULLAHTARIQ096@GMAIL.COM",
                             NormalizedUserName = "ABDULLAHT",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGRmKYaO/jde8EAjpoa/A8Zf429o17fn39gWF1kGG+aJS0wWMrdlqL8QYjIzLF3F0A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEF/BOFslqr1BY+wxdLY4kil6CXIVGNANVSjIa5WKkZ4QzVgrsJ5d1YD+h4FD4kJhgg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "cfbaebde-c6a7-4825-9ebb-1120ce497b62",
+                            SecurityStamp = "f360bd1e-37c4-42bf-86df-4d9569e294a3",
                             TwoFactorEnabled = false,
                             UserName = "abdullahT"
                         });
@@ -314,13 +255,13 @@ namespace BudgetApp.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1b70b871-c457-4380-bec7-526c1952805b",
+                            Id = "6c8ae361-82df-4fb3-9652-6b646265b57f",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "9a8ba66e-520f-4f0b-9235-6efde8debb30",
+                            Id = "5da6616f-93e3-4b2e-9e57-f00060cdd239",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         });
@@ -456,16 +397,24 @@ namespace BudgetApp.Infrastructure.Migrations
 
             modelBuilder.Entity("BudgetApp.Domain.Models.Transaction", b =>
                 {
+                    b.HasOne("BudgetApp.Domain.Models.BudgetCategory", "BudgetCategory")
+                        .WithMany("Transactions")
+                        .HasForeignKey("BudgetCategoryId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("BudgetApp.Domain.Models.Card", "Card")
                         .WithMany("Transactions")
                         .HasForeignKey("CardId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.HasOne("BudgetApp.Domain.Models.User", "User")
                         .WithMany("Transactions")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("BudgetCategory");
 
                     b.Navigation("Card");
 
@@ -521,6 +470,11 @@ namespace BudgetApp.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BudgetApp.Domain.Models.BudgetCategory", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("BudgetApp.Domain.Models.Card", b =>
