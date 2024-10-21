@@ -19,7 +19,7 @@ namespace BudgetApp.Domain.Models
 
         [Required(ErrorMessage = "Card name is required")]
         public required string CardName { get; set; } 
-        public decimal? Balance { get; set; }
+        public decimal? Balance { get; set; } // Nullable for credit cards
         
         public decimal? AvailableBalance { get; set; } // Nullable for non-credit cards
         public decimal? TotalCreditLimit { get; set; } // Nullable for non-credit cards

@@ -14,7 +14,7 @@ namespace BudgetApp.Domain.Models
         public Guid Id { get; set; }= Guid.NewGuid();
         [Required(ErrorMessage = "Amount value is required")]
         public decimal AllocatedAmount { get; set; }
-        public decimal RemainingAmount { get; set; }= decimal.Zero;
+        public decimal RemainingAmount { get; set; }
         public DateTime LastUpdated { get; set; }
 
         [Required(ErrorMessage = "Category Name value is required")]

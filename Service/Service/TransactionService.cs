@@ -44,7 +44,15 @@ namespace BudgetApp.Application.Service
 
             // Update card and budget category balances
             var adjustment = transactionType == TransactionType.Income ? transactionAmount : -transactionAmount;
-            card.Balance += adjustment;
+            if(card.cardType.ToString()=="Debit")
+            {
+                card.Balance += adjustment;
+            }
+            else if(card.cardType.ToString()=="Credit")
+            {
+                card.AvailableBalance += adjustment;
+                
+            }
             if (budgetCategory != null)
             {
                 budgetCategory.RemainingAmount += adjustment;
