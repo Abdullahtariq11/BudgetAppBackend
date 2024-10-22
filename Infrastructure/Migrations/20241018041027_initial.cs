@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BudgetApp.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -189,6 +189,7 @@ namespace BudgetApp.Infrastructure.Migrations
                 {
                     CardId = table.Column<Guid>(type: "uuid", nullable: false),
                     cardType = table.Column<int>(type: "integer", nullable: false),
+                    subCardType = table.Column<int>(type: "integer", nullable: true),
                     CardName = table.Column<string>(type: "text", nullable: false),
                     Balance = table.Column<decimal>(type: "numeric", nullable: true),
                     AvailableBalance = table.Column<decimal>(type: "numeric", nullable: true),
@@ -217,7 +218,8 @@ namespace BudgetApp.Infrastructure.Migrations
                     TransactionDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: true),
                     UserID = table.Column<string>(type: "text", nullable: false),
-                    CardId = table.Column<Guid>(type: "uuid", nullable: true)
+                    CardId = table.Column<Guid>(type: "uuid", nullable: false),
+                    BudgetCategoryId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -228,6 +230,12 @@ namespace BudgetApp.Infrastructure.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Transactions_BudgetCategories_BudgetCategoryId",
+                        column: x => x.BudgetCategoryId,
+                        principalTable: "BudgetCategories",
+                        principalColumn: "BudgetCategoryId",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Transactions_Cards_CardId",
                         column: x => x.CardId,
@@ -241,41 +249,14 @@ namespace BudgetApp.Infrastructure.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "3a04b096-1d95-448f-8a07-ec00b72c8b69", null, "Customer", "CUSTOMER" },
-                    { "71a1797a-b2fa-4c77-b50d-4adad0744e25", null, "Admin", "ADMIN" }
+                    { "5da6616f-93e3-4b2e-9e57-f00060cdd239", null, "Customer", "CUSTOMER" },
+                    { "6c8ae361-82df-4fb3-9652-6b646265b57f", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4", 0, "1473908f-2d87-4668-81af-624d40c2013a", "abdullahtariq096@gmail.com", true, "Abdullah", "Tariq", false, null, "ABDULLAHTARIQ096@GMAIL.COM", "ABDULLAHT", "AQAAAAIAAYagAAAAELPHMVwaD5wEdEFMP5gGSoFcdcqtAnqQP0qD5u4GoDBzZCr1PT5/TLNQYCuh4k+Ynw==", null, false, "8c208bfd-7934-4c72-bb11-bbb08fcb6317", false, "abdullahT" });
-
-            migrationBuilder.InsertData(
-                table: "BudgetCategories",
-                columns: new[] { "BudgetCategoryId", "AllocatedAmount", "CategoryName", "LastUpdated", "RemainingAmount", "UserID" },
-                values: new object[,]
-                {
-                    { new Guid("435b7e31-96b0-4703-9958-623b7a018a86"), 200m, "Entertainment", new DateTime(2024, 10, 9, 5, 34, 25, 232, DateTimeKind.Utc).AddTicks(760), 0m, "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4" },
-                    { new Guid("57270de8-4b7e-4346-9f76-bf2d1d85a6aa"), 500m, "Groceries", new DateTime(2024, 9, 9, 5, 34, 25, 232, DateTimeKind.Utc).AddTicks(750), 0m, "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Cards",
-                columns: new[] { "CardId", "AvailableBalance", "Balance", "CardName", "TotalCreditLimit", "UserId", "cardType" },
-                values: new object[,]
-                {
-                    { new Guid("54e0c90e-1e91-42d1-8d24-8e00fa63ec0b"), null, 1000m, "Debit Card", null, "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4", 0 },
-                    { new Guid("abf2b781-ea45-4d36-b5f7-3c6fd7e4bdf7"), 2000m, -500m, "Credit Card", 2500m, "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4", 1 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Transactions",
-                columns: new[] { "TransactionId", "Amount", "CardId", "Category", "Description", "TransactionDate", "Type", "UserID" },
-                values: new object[,]
-                {
-                    { new Guid("1303f4a7-4480-4e08-a93e-c6726b353c8b"), 500m, new Guid("54e0c90e-1e91-42d1-8d24-8e00fa63ec0b"), "Freelance", "Web development project", new DateTime(2024, 9, 9, 5, 34, 25, 232, DateTimeKind.Utc).AddTicks(1100), 0, "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4" },
-                    { new Guid("a04d5e01-1428-415b-895c-a50c5bf3f5b6"), 200m, new Guid("54e0c90e-1e91-42d1-8d24-8e00fa63ec0b"), "Groceries", "Weekly groceries", new DateTime(2024, 9, 9, 5, 34, 25, 232, DateTimeKind.Utc).AddTicks(1090), 1, "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4" }
-                });
+                values: new object[] { "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4", 0, "62c03d65-7850-482d-98c6-150c4c322464", "abdullahtariq096@gmail.com", true, "Abdullah", "Tariq", false, null, "ABDULLAHTARIQ096@GMAIL.COM", "ABDULLAHT", "AQAAAAIAAYagAAAAEF/BOFslqr1BY+wxdLY4kil6CXIVGNANVSjIa5WKkZ4QzVgrsJ5d1YD+h4FD4kJhgg==", null, false, "f360bd1e-37c4-42bf-86df-4d9569e294a3", false, "abdullahT" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -325,6 +306,11 @@ namespace BudgetApp.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Transactions_BudgetCategoryId",
+                table: "Transactions",
+                column: "BudgetCategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Transactions_CardId",
                 table: "Transactions",
                 column: "CardId");
@@ -354,13 +340,13 @@ namespace BudgetApp.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BudgetCategories");
-
-            migrationBuilder.DropTable(
                 name: "Transactions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "BudgetCategories");
 
             migrationBuilder.DropTable(
                 name: "Cards");

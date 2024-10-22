@@ -19,7 +19,7 @@ namespace BudgetApp.Infrastructure.Repository
         }
         public async Task<ICollection<Transaction>> GetAllAsync(string userId, TransactionParameter parameter, bool trackChanges)
         {
-            IQueryable<Transaction> query = (IQueryable<Transaction>)await FindByCondition(u => u.UserID.Equals(userId), trackChanges).ToListAsync();
+            var query = FindByCondition(u => u.UserID.Equals(userId), trackChanges);
 
             if (parameter.HasValidFilter())
             {
@@ -34,7 +34,6 @@ namespace BudgetApp.Infrastructure.Repository
                         query = query.Where(t => t.Type == transactionType);
                     }
                 }
-
             }
 
             return await query
@@ -43,6 +42,8 @@ namespace BudgetApp.Infrastructure.Repository
                 .OrderBy(t => t.Category)
                 .ToListAsync();
         }
+        
+        
         public async Task<Transaction> GetByIdAsync(string userId, Guid transactionId, bool trackChanges)
         {
 
@@ -52,10 +53,10 @@ namespace BudgetApp.Infrastructure.Repository
 
         public async Task CreateTransaction(Transaction transaction)
         {
-             await Create(transaction);
+            await Create(transaction);
 
         }
-        public  async Task UpdateTransaction(Transaction transaction)
+        public async Task UpdateTransaction(Transaction transaction)
         {
             await Update(transaction);
         }

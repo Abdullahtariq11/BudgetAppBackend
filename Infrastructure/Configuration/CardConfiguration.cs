@@ -26,6 +26,7 @@ namespace BudgetApp.Infrastructure.Configuration
                    .OnDelete(DeleteBehavior.SetNull);
 
             // Seed data for Cards
+            /*
             var userId = "a29f7b85-9f5f-4b0e-9497-9c6f91b8b1c4"; // Use the correct user ID
             builder.HasData(
                 new Card
@@ -47,6 +48,7 @@ namespace BudgetApp.Infrastructure.Configuration
                     UserId = userId
                 }
             );
+            */
         }
     }
 }
