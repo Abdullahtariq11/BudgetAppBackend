@@ -76,7 +76,7 @@ namespace BudgetApp.Application.Service
 
             var query = await _repositoryManager.TransactionRepository.GetAllAsync(userId, parameter, trackChanges);
 
-            var totalItems = query.Count();
+            
 
             if (parameter.HasValidFilter())
             {
@@ -92,7 +92,7 @@ namespace BudgetApp.Application.Service
                     }
                 }
             }
-
+            var totalItems = query.Count();
             var transactions = await query
                 .Skip((parameter.PageNumber - 1) * parameter.PageSize)
                 .Take(parameter.PageSize)
