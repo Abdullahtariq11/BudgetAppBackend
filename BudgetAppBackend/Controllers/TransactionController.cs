@@ -31,7 +31,14 @@ namespace BudgetApp.API.Controllers
                 return Forbid();  // Block if the user is trying to access another user's data
             }
             var transactions = await _serviceManager.transactionService.GetAllTransaction(userId, parameter, trackChanges: false);
-            return Ok(transactions);
+            var totalItems= transactions.Count;
+            var response= new {
+                transactions,
+                totalItems,
+                parameter.PageNumber,
+                parameter.PageSize,
+            };
+            return Ok(response);
         }
 
         [HttpGet("{id:guid}")]
