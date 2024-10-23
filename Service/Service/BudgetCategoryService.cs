@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using BudgetApp.Application.Service.Contracts;
 using BudgetApp.Domain.Contracts;
+using BudgetApp.Domain.Dtos.BudgetCategoryDto;
 using BudgetApp.Domain.Models;
-using BudgetApp.Shared.Dtos.BudgetCategoryDto;
 using Domain.Exceptions;
 using Microsoft.Extensions.Logging;
 

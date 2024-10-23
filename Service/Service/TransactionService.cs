@@ -6,10 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using BudgetApp.Application.Service.Contracts;
 using BudgetApp.Domain.Contracts;
+using BudgetApp.Domain.Dtos.TransactionDto;
 using BudgetApp.Domain.Models;
-using BudgetApp.Shared.Dtos.TransactionDto;
 using BudgetApp.Shared.RequestFeatures;
 using Domain.Exceptions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace BudgetApp.Application.Service
@@ -44,14 +45,14 @@ namespace BudgetApp.Application.Service
 
             // Update card and budget category balances
             var adjustment = transactionType == TransactionType.Income ? transactionAmount : -transactionAmount;
-            if(card.cardType.ToString()=="Debit")
+            if (card.cardType.ToString() == "Debit")
             {
                 card.Balance += adjustment;
             }
-            else if(card.cardType.ToString()=="Credit")
+            else if (card.cardType.ToString() == "Credit")
             {
                 card.AvailableBalance += adjustment;
-                
+
             }
             if (budgetCategory != null)
             {
@@ -69,17 +70,43 @@ namespace BudgetApp.Application.Service
 
         }
 
-        public async Task<ICollection<Transaction>> GetAllTransaction(string userId, TransactionParameter parameter, bool trackChanges)
+        public async Task<TransactionsDto> GetAllTransaction(string userId, TransactionParameter parameter, bool trackChanges)
         {
             _logger.LogInformation("Getting Transactions for user {userId}", userId);
 
-            var transactions = await _repositoryManager.TransactionRepository.GetAllAsync(userId, parameter, trackChanges);
+            var query = await _repositoryManager.TransactionRepository.GetAllAsync(userId, parameter, trackChanges);
+
+            
+
+            if (parameter.HasValidFilter())
+            {
+                if (parameter.FilterOn.Equals("Category", StringComparison.OrdinalIgnoreCase))
+                {
+                    query = query.Where(t => t.Category.Contains(parameter.FilterQuery));
+                }
+                if (parameter.FilterOn.Equals("Type", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (Enum.TryParse(parameter.FilterQuery, true, out TransactionType transactionType))
+                    {
+                        query = query.Where(t => t.Type == transactionType);
+                    }
+                }
+            }
+            var totalItems = query.Count();
+            var transactions = await query
+                .Skip((parameter.PageNumber - 1) * parameter.PageSize)
+                .Take(parameter.PageSize)
+                .OrderBy(t => t.Category)
+                .ToListAsync();
             if (transactions == null)
             {
                 throw new NotFoundException($"Transactions not found for user {userId}");
             }
 
-            return transactions;
+            var response = new TransactionsDto(transactions, parameter.PageSize, parameter.PageNumber, totalItems);
+            return response;
+
+
         }
 
         public async Task<Transaction> GetTransactionById(string userId, Guid TransactionId, bool trackChanges)
@@ -156,7 +183,7 @@ namespace BudgetApp.Application.Service
                 throw new NotFoundException($"Transaction with id {transactionId} not found for user {userId}");
             }
 
-             await updateBalance(-transaction.Amount, transaction.CardId, transaction.Type, transaction.BudgetCategoryId, userId);
+            await updateBalance(-transaction.Amount, transaction.CardId, transaction.Type, transaction.BudgetCategoryId, userId);
             await _repositoryManager.TransactionRepository.DeleteTransaction(transaction);
             _repositoryManager.Save();
             return transaction;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 
 
-namespace BudgetApp.Shared.Dtos.TransactionDto
+namespace BudgetApp.Domain.Dtos.TransactionDto
 {
     public record TransactionDto(decimal amount,string transactionType,
     string category,DateTime transactionDate,string description, Guid cardId,Guid BudgetCategoryId);

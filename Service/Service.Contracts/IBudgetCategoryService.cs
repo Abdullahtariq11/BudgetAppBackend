@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BudgetApp.Domain.Dtos.BudgetCategoryDto;
 using BudgetApp.Domain.Models;
-using BudgetApp.Shared.Dtos.BudgetCategoryDto;
+
 
 namespace BudgetApp.Application.Service.Contracts
 {
