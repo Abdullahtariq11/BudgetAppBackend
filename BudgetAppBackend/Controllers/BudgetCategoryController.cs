@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BudgetApp.Application.Service.Contracts;
+using BudgetApp.Domain.Dtos.BudgetCategoryDto;
 using BudgetApp.Domain.Models;
-using BudgetApp.Shared.Dtos.BudgetCategoryDto;
+
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -17,30 +17,13 @@ namespace BudgetApp.Infrastructure.Repository
         public TransactionRepository(RepositoryContext context) : base(context)
         {
         }
-        public async Task<ICollection<Transaction>> GetAllAsync(string userId, TransactionParameter parameter, bool trackChanges)
+        public async Task<IQueryable<Transaction>> GetAllAsync(string userId, TransactionParameter parameter, bool trackChanges)
         {
             var query = FindByCondition(u => u.UserID.Equals(userId), trackChanges);
 
-            if (parameter.HasValidFilter())
-            {
-                if (parameter.FilterOn.Equals("Category", StringComparison.OrdinalIgnoreCase))
-                {
-                    query = query.Where(t => t.Category.Contains(parameter.FilterQuery));
-                }
-                if (parameter.FilterOn.Equals("Type", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (Enum.TryParse(parameter.FilterQuery, true, out TransactionType transactionType))
-                    {
-                        query = query.Where(t => t.Type == transactionType);
-                    }
-                }
-            }
+            return query;
 
-            return await query
-                .Skip((parameter.PageNumber - 1) * parameter.PageSize)
-                .Take(parameter.PageSize)
-                .OrderBy(t => t.Category)
-                .ToListAsync();
+
         }
         
         

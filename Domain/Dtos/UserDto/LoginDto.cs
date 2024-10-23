@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BudgetApp.Shared.Dtos.UserDto
+namespace BudgetApp.Domain.Dtos.UserDto
 {
     public record LoginDto(string Username,string Password,bool RememberMe);
 

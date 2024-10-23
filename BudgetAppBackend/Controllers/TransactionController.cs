@@ -1,11 +1,11 @@
 ﻿using System.Security.Claims;
 using BudgetApp.Application.Service.Contracts;
 using BudgetApp.Domain.Models;
-using BudgetApp.Shared.Dtos.TransactionDto;
 using BudgetApp.Shared.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using BudgetApp.Domain.Dtos.TransactionDto;
 
 namespace BudgetApp.API.Controllers
 {
@@ -30,14 +30,7 @@ namespace BudgetApp.API.Controllers
             {
                 return Forbid();  // Block if the user is trying to access another user's data
             }
-            var transactions = await _serviceManager.transactionService.GetAllTransaction(userId, parameter, trackChanges: false);
-            var totalItems= transactions.Count;
-            var response= new {
-                transactions,
-                totalItems,
-                parameter.PageNumber,
-                parameter.PageSize,
-            };
+            var response = await _serviceManager.transactionService.GetAllTransaction(userId, parameter, trackChanges: false);
             return Ok(response);
         }
 

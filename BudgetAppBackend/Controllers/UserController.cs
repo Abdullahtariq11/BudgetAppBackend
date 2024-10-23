@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BudgetApp.Application.Service.Contracts;
-using BudgetApp.Shared.Dtos.UserDto;
+using BudgetApp.Domain.Dtos.UserDto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
