@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using BudgetApp.Application.Service.Contracts;
 using BudgetApp.Domain.Dtos.BudgetCategoryDto;
 using BudgetApp.Domain.Models;
-
+using BudgetApp.Shared.RequestFeatures;
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,14 +24,11 @@ namespace BudgetAppBackend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCategoriesForUser()
+        public async Task<IActionResult> GetCategoriesForUser( [FromQuery] BudgetParameter budgetParameter)
         {
             var userId = User.FindFirst("Id")?.Value;
-            var budgets = await _serviceManager.budgetCategoryService.GetBudgetCategoriesAsync(userId, trackChanges: false);
-            var response= new{
-                budgets,
-                budgets.Count
-            };
+            var response = await _serviceManager.budgetCategoryService.GetBudgetCategoriesAsync(userId,budgetParameter, trackChanges: false);
+
             return Ok(response);
         }
         [HttpGet("{id:guid}")]

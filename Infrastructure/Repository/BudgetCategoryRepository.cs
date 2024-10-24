@@ -32,10 +32,11 @@ namespace BudgetApp.Infrastructure.Repository
             
         }
 
-        public async Task<ICollection<BudgetCategory>> GetAllAsync(string userId, bool trackChanges)
+        public async Task<IQueryable<BudgetCategory>> GetAllAsync(string userId, bool trackChanges)
         {
 
-            return await FindByCondition(u=>u.UserID .Equals(userId) ,trackChanges).ToListAsync();
+            var querry=  FindByCondition(u=>u.UserID .Equals(userId) ,trackChanges);
+            return querry;
         }
 
         public async Task<BudgetCategory> GetByIdAsync(string userId, Guid categoryId, bool trackChanges)

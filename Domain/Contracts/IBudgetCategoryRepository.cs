@@ -9,7 +9,7 @@ namespace BudgetApp.Domain.Contracts
 {
     public interface IBudgetCategoryRepository
     {
-        public Task<ICollection<BudgetCategory>> GetAllAsync(string userId,bool trackChanges);
+        public Task<IQueryable<BudgetCategory>> GetAllAsync(string userId,bool trackChanges);
         public Task<BudgetCategory> GetByIdAsync(string userId,Guid categoryId,bool trackChanges);
 
         public void CreateBudgetCategory(string userId,BudgetCategory category);
