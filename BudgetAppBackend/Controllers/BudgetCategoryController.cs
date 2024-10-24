@@ -28,7 +28,11 @@ namespace BudgetAppBackend.Controllers
         {
             var userId = User.FindFirst("Id")?.Value;
             var budgets = await _serviceManager.budgetCategoryService.GetBudgetCategoriesAsync(userId, trackChanges: false);
-            return Ok(budgets);
+            var response= new{
+                budgets,
+                budgets.Count
+            };
+            return Ok(response);
         }
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetCategoryById(Guid id)

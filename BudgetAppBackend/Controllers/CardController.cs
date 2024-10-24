@@ -26,7 +26,11 @@ namespace BudgetAppBackend.Controllers
         {
             var userId = User.FindFirst("Id")?.Value;
             var cards = await _serviceManager.cardService.GetCardAsync(userId, trackChanges: false);
-            return Ok(cards);
+            var response= new{
+                cards,
+                cards.Count
+            };
+            return Ok(response);
         }
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetCardById( Guid id)
