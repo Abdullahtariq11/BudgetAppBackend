@@ -9,6 +9,7 @@ using BudgetApp.Domain.Contracts;
 using BudgetApp.Domain.Dtos.TransactionDto;
 using BudgetApp.Domain.Models;
 using BudgetApp.Shared.RequestFeatures;
+using Domain.Dtos.TransactionDto;
 using Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -144,7 +145,7 @@ namespace BudgetApp.Application.Service
             return transaction;
         }
 
-        public async Task<Transaction> UpdateTransaction(string userId, Guid transactionId, Transaction transaction, bool trackChanges)
+        public async Task<UpdateTransactionDto> UpdateTransaction(string userId, Guid transactionId, UpdateTransactionDto transaction, bool trackChanges)
         {
             _logger.LogInformation("Updating transaction for user {userId}", userId);
             var transactionRetrieved = await _repositoryManager.TransactionRepository.GetByIdAsync(userId, transactionId, trackChanges);
@@ -152,23 +153,36 @@ namespace BudgetApp.Application.Service
             {
                 throw new NotFoundException($"Transaction with id {transactionId} not found for user {userId}");
             }
+             if (!Enum.TryParse(transaction.transactionType, true, out TransactionType transactionType))
+            {
+                throw new BadRequestException("Invalid transaction type");
+            }
+            
 
             // Check if there's a change in amount, type, or budget category
-            bool isAmountChanged = transactionRetrieved.Amount != transaction.Amount;
-            bool isTypeChanged = transactionRetrieved.Type != transaction.Type;
-            bool isCategoryChanged = transactionRetrieved.BudgetCategoryId != transaction.BudgetCategoryId;
+            bool isAmountChanged = transactionRetrieved.Amount != transaction.amount;
+            bool isTypeChanged = transactionRetrieved.Type != transactionType;
+            //bool isCategoryChanged = transactionRetrieved.BudgetCategoryId != transaction.BudgetCategoryId;
 
+           
+            
             // If there are any changes, reverse the original transaction's impact first
-            if (isAmountChanged || isTypeChanged || isCategoryChanged)
+            if (isAmountChanged || isTypeChanged ) //(isAmountChanged || isTypeChanged || isCategoryChanged)
             {
                 // Reverse the original transaction's effect
                 await updateBalance(-transactionRetrieved.Amount, transactionRetrieved.CardId, transactionRetrieved.Type, transactionRetrieved.BudgetCategoryId, userId);
 
                 // Apply the new transaction's effect
-                await updateBalance(transaction.Amount, transaction.CardId, transaction.Type, transaction.BudgetCategoryId, userId);
+                await updateBalance(transaction.amount, transactionRetrieved.CardId, transactionType, transactionRetrieved.BudgetCategoryId, userId);
             }
-            transaction.Id = transactionRetrieved.Id;
-            await _repositoryManager.TransactionRepository.UpdateTransaction(transaction);
+                transactionRetrieved.Amount = transaction.amount;
+                transactionRetrieved.TransactionDate = transaction.transactionDate;
+                transactionRetrieved.Description = transaction.description;
+                transactionRetrieved.Category = transaction.category;
+                transactionRetrieved.Type = transactionType;
+
+           
+            await _repositoryManager.TransactionRepository.UpdateTransaction(transactionRetrieved);
             _repositoryManager.Save();
             return transaction;
 

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BudgetApp.Domain.Dtos.TransactionDto;
+using Domain.Dtos.TransactionDto;
 
 namespace BudgetApp.API.Controllers
 {
@@ -72,7 +73,7 @@ namespace BudgetApp.API.Controllers
             return NoContent();
         }
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> UpdateTransaction(Guid id, [FromBody] Transaction transaction)
+        public async Task<IActionResult> UpdateTransaction(Guid id, [FromBody] UpdateTransactionDto transactionUpdates)
         {
             var userId = User.FindFirst("Id")?.Value;
             var tokenUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -81,7 +82,7 @@ namespace BudgetApp.API.Controllers
                 return Forbid();  // Block if the user is trying to access another user's data
             }
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var transactionRetrieved = await _serviceManager.transactionService.UpdateTransaction(userId, id, transaction, trackChanges: false);
+            var transactionRetrieved = await _serviceManager.transactionService.UpdateTransaction(userId, id, transactionUpdates, trackChanges: false);
             return NoContent();
         }
     }
