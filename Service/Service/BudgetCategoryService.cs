@@ -106,7 +106,7 @@ namespace BudgetApp.Application.Service
             budget.AllocatedAmount = budgetCategory.allocatedAmount;
             budget.CategoryName = budgetCategory.categoryName;
             budget.RemainingAmount = budgetCategory.remainingAmount;
-            budget.LastUpdated = budgetCategory.lastUpdated;
+            budget.LastUpdated = DateTime.UtcNow;
             _repositoryManager.BudgetCategoryRepository.UpdateBudgetCategory(userId, budget);
             _repositoryManager.Save();
             return budgetCategory;
