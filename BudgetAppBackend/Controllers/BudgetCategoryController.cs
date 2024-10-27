@@ -23,6 +23,7 @@ namespace BudgetAppBackend.Controllers
             _serviceManager = serviceManager;
         }
 
+
         [HttpGet]
         public async Task<IActionResult> GetCategoriesForUser( [FromQuery] BudgetParameter budgetParameter)
         {

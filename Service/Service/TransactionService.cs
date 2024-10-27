@@ -173,13 +173,16 @@ namespace BudgetApp.Application.Service
                 await updateBalance(-transactionRetrieved.Amount, transactionRetrieved.CardId, transactionRetrieved.Type, transactionRetrieved.BudgetCategoryId, userId);
 
                 // Apply the new transaction's effect
-                await updateBalance(transaction.amount, transactionRetrieved.CardId, transactionType, transactionRetrieved.BudgetCategoryId, userId);
+                await updateBalance(transaction.amount, transactionRetrieved.CardId, transactionType, transaction.budgetCategoryId, userId);
             }
                 transactionRetrieved.Amount = transaction.amount;
                 transactionRetrieved.TransactionDate = transaction.transactionDate;
                 transactionRetrieved.Description = transaction.description;
                 transactionRetrieved.Category = transaction.category;
                 transactionRetrieved.Type = transactionType;
+                transactionRetrieved.BudgetCategoryId=transaction.budgetCategoryId;
+                
+
 
            
             await _repositoryManager.TransactionRepository.UpdateTransaction(transactionRetrieved);
