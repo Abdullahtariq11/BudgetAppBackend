@@ -14,6 +14,6 @@ namespace BudgetApp.Domain.Contracts
 
         public void CreateCard(string userId,Card card);
         public void UpdateCard(string userId,Card card);
-        public void DeleteCard(Card card);
+        public Task DeleteCard(Card card);
     }
 }
