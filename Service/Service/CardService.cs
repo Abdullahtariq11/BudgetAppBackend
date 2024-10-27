@@ -114,24 +114,38 @@ namespace BudgetApp.Application.Service
             //create card subtype only if card is debit
             if (updatedCard.cardType == CardType.Debit.ToString())
             {
-                if (updatedCard.subCardType=="0")
+                if (updatedCard.subCardType == "0")
                 {
                     throw new BadRequestException("For Debit cards, subtype must be 'Savings' or 'Chequing'.");
                 }
-               
+
             }
 
             Enum.TryParse(updatedCard.cardType, true, out CardType cardType);
             Enum.TryParse(updatedCard.subCardType, true, out SubCardType subType);
-            card.AvailableBalance = updatedCard.AvailableBalance;
-            card.CardName = updatedCard.CardName;
-            card.Balance = updatedCard.Balance;
-            card.cardType = cardType;
-            card.subCardType = subType;
+
+            if (cardType == CardType.Debit)
+            {
+                card.AvailableBalance = null;
+                card.TotalCreditLimit = null;
+                card.CardName = updatedCard.CardName;
+                card.Balance = updatedCard.Balance;
+                card.subCardType = subType;
+            }
+            else if (cardType == CardType.Credit)
+            {
+                card.AvailableBalance = updatedCard.AvailableBalance;
+                card.TotalCreditLimit = updatedCard.TotalCreditLimit;
+                card.CardName = updatedCard.CardName;
+                card.Balance = null;
+                card.subCardType = null;
+            }
+
 
             _repositoryManager.CardRepository.UpdateCard(userId, card);
             _repositoryManager.Save();
-            return updatedCard;
+            return new CreatedCardDto(id, updatedCard.CardName,updatedCard.Balance,updatedCard.AvailableBalance,
+            updatedCard.TotalCreditLimit,updatedCard.cardType,updatedCard.subCardType);
         }
     }
 }

@@ -24,10 +24,9 @@ namespace Infrastructure.Repository
             
         }
 
-        public void DeleteCard(Card card)
+        public async Task DeleteCard(Card card)
         {
-            Delete(card);
-            
+            await Delete(card);
         }
 
         public async Task<ICollection<Card>> GetAllAsync(string userId, bool trackChanges)

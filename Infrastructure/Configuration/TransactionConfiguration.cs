@@ -23,7 +23,7 @@ namespace BudgetApp.Infrastructure.Configuration
             builder.HasOne(t => t.Card)
                    .WithMany(c => c.Transactions)
                    .HasForeignKey(t => t.CardId)
-                   .OnDelete(DeleteBehavior.SetNull);
+                   .OnDelete(DeleteBehavior.Cascade); //if this behavior then delete when card is deleted
 
             // Configure relationship between Transaction and budgetCategory
             builder.HasOne(t => t.BudgetCategory)
