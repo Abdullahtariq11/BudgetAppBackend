@@ -9,6 +9,6 @@ using System.Transactions;
 namespace BudgetApp.Domain.Dtos.TransactionDto
 {
     public record TransactionDto(decimal amount,string transactionType,
-    string category,DateTime transactionDate,string description, Guid cardId,Guid BudgetCategoryId);
+    string category,DateTime transactionDate,string description, Guid cardId,Guid? BudgetCategoryId);
 
 }
