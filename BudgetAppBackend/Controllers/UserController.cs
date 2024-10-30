@@ -65,7 +65,17 @@ namespace BudgetAppBackend.Controllers
             return Ok(new { Id=id,FirstName = firstName, LastName = lastName, Username = username });
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
+        [HttpGet("DetailUserInfo")]
+        public async Task<IActionResult> DetailUserInfo()
+        {
+            var id = User.FindFirst("Id")?.Value;
+            var user= await _serviceManager.userService.GetUserDetail(id);
+
+            return Ok(user);
+        }
+
+        
         [HttpDelete("{userId=string}")]
         public async Task<IActionResult> DeleteUser([FromRoute] string userId)
         {

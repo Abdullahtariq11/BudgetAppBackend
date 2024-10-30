@@ -14,6 +14,8 @@ namespace Service.Service.Contracts
         public Task<string> GenerateJwtToken(User user);
         public Task<IdentityResult> RegisterUser(RegisterationDto registerationDto);
         public Task<ICollection<CreatedUserDto>> GetAllUser();
+
+        public Task<UserDetailDto> GetUserDetail(string userId);
         public Task<string> Login(LoginDto loginDto);
         public Task<bool> DeleteUser(string userId);
     }

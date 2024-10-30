@@ -72,6 +72,20 @@ namespace Service.Service
             return await GenerateJwtToken(user);
 
         }
+        public async Task<UserDetailDto> GetUserDetail(string userId)
+        {
+            _logger.LogInformation("Getting user details");
+           
+            var user = await _userManager.Users.SingleOrDefaultAsync(u=>u.Id == userId);
+            if (user == null)
+            {
+                throw new BadRequestException("Invalid User");
+            }
+            var userDto= new UserDetailDto(user.FirstName,user.LastName, user.Email,
+            user.Email,user.PhoneNumber);
+
+            return userDto;
+        }
 
         public async Task<ICollection<CreatedUserDto>> GetAllUser()
         {
