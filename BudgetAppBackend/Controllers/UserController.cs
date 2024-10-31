@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using BudgetApp.Application.Service.Contracts;
 using BudgetApp.Domain.Dtos.UserDto;
@@ -45,6 +46,15 @@ namespace BudgetAppBackend.Controllers
         {
             var users = await _serviceManager.userService.GetAllUser();
             return Ok(users);
+        }
+
+        [HttpPost("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            var userId = User.FindFirst("Id")?.Value;
+            await _serviceManager.userService.Logout(userId);
+            return Ok();
+
         }
 
         [HttpPost("Login")]
