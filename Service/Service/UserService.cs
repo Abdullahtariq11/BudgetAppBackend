@@ -42,7 +42,7 @@ namespace Service.Service
                 new Claim("LastName", user.LastName),                      // Last Name
                 new Claim("SecurityStamp", user.SecurityStamp)
             };
-            
+
 
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
             var token = new JwtSecurityToken(
@@ -78,7 +78,7 @@ namespace Service.Service
         public async Task Logout(string userId)
         {
             _logger.LogInformation("User Logging out");
-            var user = await _userManager.FindByIdAsync( userId);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 throw new BadRequestException($"Unable to load user with id {userId}");
@@ -86,22 +86,42 @@ namespace Service.Service
             // Update SecurityStamp to invalidate the token
             await _userManager.UpdateSecurityStampAsync(user);
             await _signInManager.SignOutAsync();
-            
+
         }
 
         public async Task<UserDetailDto> GetUserDetail(string userId)
         {
             _logger.LogInformation("Getting user details");
-           
-            var user = await _userManager.Users.SingleOrDefaultAsync(u=>u.Id == userId);
+
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
             if (user == null)
             {
                 throw new BadRequestException("Invalid User");
             }
-            var userDto= new UserDetailDto(user.FirstName,user.LastName, user.Email,
-            user.Email,user.PhoneNumber);
+            var userDto = new UserDetailDto(user.FirstName, user.LastName, user.Email,
+            user.Email, user.PhoneNumber);
 
             return userDto;
+        }
+
+        public async Task EditUserInfo(UserDetailDto userDetailDto, string userId)
+        {
+            _logger.LogInformation("Getting user details");
+
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                throw new BadRequestException("Invalid User");
+            }
+            // Persist changes to the database
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new Exception($"Failed to update user: {errors}");
+            }
+
         }
 
         public async Task<ICollection<CreatedUserDto>> GetAllUser()
@@ -131,7 +151,7 @@ namespace Service.Service
             var result = await _userManager.CreateAsync(user, registerationDto.Password);
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, registerationDto.Role);
+                await _userManager.AddToRoleAsync(user, "Customer");
             }
             return result;
         }
