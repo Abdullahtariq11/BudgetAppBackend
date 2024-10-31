@@ -39,8 +39,10 @@ namespace Service.Service
                 new Claim(ClaimTypes.NameIdentifier, user.Id),            // UserID
                  new Claim("Id", user.Id),
                 new Claim("FirstName", user.FirstName),                   // First Name
-                new Claim("LastName", user.LastName)                      // Last Name
+                new Claim("LastName", user.LastName),                      // Last Name
+                new Claim("SecurityStamp", user.SecurityStamp)
             };
+            
 
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
             var token = new JwtSecurityToken(
@@ -72,6 +74,21 @@ namespace Service.Service
             return await GenerateJwtToken(user);
 
         }
+
+        public async Task Logout(string userId)
+        {
+            _logger.LogInformation("User Logging out");
+            var user = await _userManager.FindByIdAsync( userId);
+            if (user == null)
+            {
+                throw new BadRequestException($"Unable to load user with id {userId}");
+            }
+            // Update SecurityStamp to invalidate the token
+            await _userManager.UpdateSecurityStampAsync(user);
+            await _signInManager.SignOutAsync();
+            
+        }
+
         public async Task<UserDetailDto> GetUserDetail(string userId)
         {
             _logger.LogInformation("Getting user details");

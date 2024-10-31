@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security.Claims;
+using System.Text;
 using BudgetApp.Application.Service;
 using BudgetApp.Application.Service.Contracts;
 using BudgetApp.Domain.Contracts;
@@ -27,15 +28,16 @@ namespace BudgetApp.API.Extension
         /// <summary>
         /// Adding and Configuring identity.
         /// </summary>
-        public static void ConfigureIdentity(this IServiceCollection services){
-            var builder=services.AddIdentity<User,IdentityRole>(o=>
+        public static void ConfigureIdentity(this IServiceCollection services)
+        {
+            var builder = services.AddIdentity<User, IdentityRole>(o =>
             {
-                o.Password.RequireDigit=true;
-                o.Password.RequiredLength=8;
-                o.Password.RequireUppercase=true;
-                o.Password.RequireLowercase=true;
-                o.Password.RequireNonAlphanumeric=false;
-                o.User.RequireUniqueEmail=true;
+                o.Password.RequireDigit = true;
+                o.Password.RequiredLength = 8;
+                o.Password.RequireUppercase = true;
+                o.Password.RequireLowercase = true;
+                o.Password.RequireNonAlphanumeric = false;
+                o.User.RequireUniqueEmail = true;
             })
             .AddEntityFrameworkStores<RepositoryContext>()
             .AddDefaultTokenProviders();
@@ -47,9 +49,10 @@ namespace BudgetApp.API.Extension
         //configure serilog using fluent method
         public static void ConfigureSerilog(this IHostBuilder host)
         {
-            host.UseSerilog((context,configuration)=>{
-                 configuration.ReadFrom.Configuration(context.Configuration)
-                 .MinimumLevel.Override("Microsoft",LogEventLevel.Warning);
+            host.UseSerilog((context, configuration) =>
+            {
+                configuration.ReadFrom.Configuration(context.Configuration)
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning);
             });
         }
 
@@ -59,22 +62,38 @@ namespace BudgetApp.API.Extension
 
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddAuthentication(options=>{
+            services.AddAuthentication(options =>
+            {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(options=>
+            .AddJwtBearer(options =>
             {
-                options.TokenValidationParameters=new TokenValidationParameters
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer=true,
-                    ValidateAudience=true,
-                    ValidateLifetime=true,
-                    ValidateIssuerSigningKey=true,
-                    ValidIssuer=configuration["JWT:Issuer"],
-                    ValidAudience=configuration["JWT:Audience"],
-                    IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Key"]))
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = configuration["JWT:Issuer"],
+                    ValidAudience = configuration["JWT:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Key"]))
 
+                };
+                // Add the SecurityStamp validation logic here
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = async context =>
+                    {
+                        var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager<User>>();
+                        var userId = context.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                        var user = await userManager.FindByIdAsync(userId);
+
+                        if (user == null || user.SecurityStamp != context.Principal.FindFirst("SecurityStamp")?.Value)
+                        {
+                            context.Fail("Unauthorized");
+                        }
+                    }
                 };
             });
         }

@@ -15,6 +15,8 @@ namespace Service.Service.Contracts
         public Task<IdentityResult> RegisterUser(RegisterationDto registerationDto);
         public Task<ICollection<CreatedUserDto>> GetAllUser();
 
+        public  Task Logout(string userId);
+
         public Task<UserDetailDto> GetUserDetail(string userId);
         public Task<string> Login(LoginDto loginDto);
         public Task<bool> DeleteUser(string userId);
