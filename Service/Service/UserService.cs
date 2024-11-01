@@ -113,6 +113,10 @@ namespace Service.Service
             {
                 throw new BadRequestException("Invalid User");
             }
+            user.FirstName = userDetailDto.FirstName;
+            user.LastName = userDetailDto.LastName;
+            user.Email = userDetailDto.Email;
+            user.PhoneNumber = userDetailDto.PhoneNumber;
             // Persist changes to the database
             var result = await _userManager.UpdateAsync(user);
 
@@ -121,6 +125,7 @@ namespace Service.Service
                 var errors = string.Join(", ", result.Errors.Select(e => e.Description));
                 throw new Exception($"Failed to update user: {errors}");
             }
+            _logger.LogInformation("User  updated successfully");
 
         }
 

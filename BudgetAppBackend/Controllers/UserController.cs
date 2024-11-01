@@ -94,8 +94,6 @@ namespace BudgetAppBackend.Controllers
 
             
         }
-
-
         
         [HttpDelete("{userId=string}")]
         public async Task<IActionResult> DeleteUser([FromRoute] string userId)
