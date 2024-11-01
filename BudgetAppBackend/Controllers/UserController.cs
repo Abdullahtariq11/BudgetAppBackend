@@ -85,6 +85,15 @@ namespace BudgetAppBackend.Controllers
             return Ok(user);
         }
 
+        [HttpPut("Edit")]
+        public async Task<IActionResult> EditUserInfo([FromBody] UserDetailDto userDetailDto)
+        {
+            var id = User.FindFirst("Id")?.Value;
+            await _serviceManager.userService.EditUserInfo(userDetailDto,id);
+            return NoContent();
+
+            
+        }
         
         [HttpDelete("{userId=string}")]
         public async Task<IActionResult> DeleteUser([FromRoute] string userId)
