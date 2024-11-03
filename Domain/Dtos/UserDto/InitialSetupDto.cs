@@ -11,10 +11,10 @@ namespace Domain.Dtos.UserDto
     public class InitialSetupDto
     {
         [Required]
-        public CreatedCardDto? Card { get;  }
+        public CreatedCardDto? Card { get; set; }
         [Required]
-        public CreatedCategoryDto? Category1 { get; }
+        public CreatedCategoryDto? Category1 { get;set; }
         [Required]
-        public CreatedCategoryDto? Category2 { get;  }
+        public CreatedCategoryDto? Category2 { get; set; }
     }
 }

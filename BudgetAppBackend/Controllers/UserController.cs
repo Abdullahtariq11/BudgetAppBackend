@@ -30,16 +30,9 @@ namespace BudgetAppBackend.Controllers
         public async Task<IActionResult> RegisterUser([FromBody] RegisterationDto registerationDto)
         {
 
-            var result = await _serviceManager.userService.RegisterUser(registerationDto);
-            if (!result.Succeeded)
-            {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.TryAddModelError(error.Code, error.Description);
-                }
-                return BadRequest(ModelState);
-            }
-            return StatusCode(201);
+            var token = await _serviceManager.userService.RegisterUser(registerationDto);
+            return Ok(new { Token = token });
+            
         }
 
         [HttpPost("InitialSetup")]

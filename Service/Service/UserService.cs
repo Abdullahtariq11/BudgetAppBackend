@@ -142,7 +142,7 @@ namespace Service.Service
             return userDtos;
         }
 
-        public async Task<IdentityResult> RegisterUser(RegisterationDto registerationDto)
+        public async Task<string> RegisterUser(RegisterationDto registerationDto)
         {
             _logger.LogInformation("Registering User");
             var user = new User
@@ -158,7 +158,7 @@ namespace Service.Service
             {
                 await _userManager.AddToRoleAsync(user, "Customer");
             }
-            return result;
+            return await GenerateJwtToken(user);;
         }
 
         public async Task InitialSetup(string userId)

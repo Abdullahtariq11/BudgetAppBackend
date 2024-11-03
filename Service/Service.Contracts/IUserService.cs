@@ -12,7 +12,7 @@ namespace Service.Service.Contracts
     public interface IUserService
     {
         public Task<string> GenerateJwtToken(User user);
-        public Task<IdentityResult> RegisterUser(RegisterationDto registerationDto);
+        public Task<string> RegisterUser(RegisterationDto registerationDto);
         public Task<ICollection<CreatedUserDto>> GetAllUser();
 
         public Task EditUserInfo(UserDetailDto userDetailDto,string userId);
