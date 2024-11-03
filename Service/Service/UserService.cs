@@ -142,7 +142,7 @@ namespace Service.Service
             return userDtos;
         }
 
-        public async Task<IdentityResult> RegisterUser(RegisterationDto registerationDto)
+        public async Task<string> RegisterUser(RegisterationDto registerationDto)
         {
             _logger.LogInformation("Registering User");
             var user = new User
@@ -158,7 +158,32 @@ namespace Service.Service
             {
                 await _userManager.AddToRoleAsync(user, "Customer");
             }
-            return result;
+            return await GenerateJwtToken(user);;
+        }
+
+        public async Task InitialSetup(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new BadRequestException($"User with ID {userId} does not exist");
+            }
+
+            if (user.SetupComplete)
+            {
+                throw new BadRequestException("Setup is already complete.");
+            }
+
+            user.SetupComplete = true;
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new Exception($"Failed to update user: {errors}");
+            }
+
+            _logger.LogInformation("Setup completed successfully for user {UserId}", userId);
         }
 
         public async Task<bool> DeleteUser(string userId)
