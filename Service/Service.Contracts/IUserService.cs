@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BudgetApp.Domain.Dtos.UserDto;
 using BudgetApp.Domain.Models;
-
+using Domain.Dtos.UserDto;
 using Microsoft.AspNetCore.Identity;
 
 namespace Service.Service.Contracts
@@ -16,6 +16,7 @@ namespace Service.Service.Contracts
         public Task<ICollection<CreatedUserDto>> GetAllUser();
 
         public Task EditUserInfo(UserDetailDto userDetailDto,string userId);
+        public Task InitialSetup(string userId);
 
         public  Task Logout(string userId);
 

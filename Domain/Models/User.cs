@@ -19,6 +19,9 @@ namespace BudgetApp.Domain.Models
         [Required(ErrorMessage = "This field is required")]
         public string? LastName { get; set; }
 
+        [Required]
+        public bool SetupComplete { get; set; }=false;
+
         ///Navigation Properties
 
         public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
