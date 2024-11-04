@@ -40,6 +40,7 @@ namespace Service.Service
                  new Claim("Id", user.Id),
                 new Claim("FirstName", user.FirstName),                   // First Name
                 new Claim("LastName", user.LastName),                      // Last Name
+                new Claim("setupComplete", user.SetupComplete.ToString()), // Add setupComplete as a claim
                 new Claim("SecurityStamp", user.SecurityStamp)
             };
 
@@ -158,10 +159,9 @@ namespace Service.Service
             {
                 await _userManager.AddToRoleAsync(user, "Customer");
             }
-            return await GenerateJwtToken(user);;
+            return await GenerateJwtToken(user); ;
         }
-
-        public async Task InitialSetup(string userId)
+        public async Task<string> InitialSetup(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
@@ -183,7 +183,11 @@ namespace Service.Service
                 throw new Exception($"Failed to update user: {errors}");
             }
 
-            _logger.LogInformation("Setup completed successfully for user {UserId}", userId);
+            // Generate a new token with updated claims
+            var newToken = await GenerateJwtToken(user);
+            _logger.LogInformation("Setup completed and new token generated for user {UserId}", userId);
+
+            return newToken;
         }
 
         public async Task<bool> DeleteUser(string userId)
