@@ -32,7 +32,7 @@ namespace BudgetAppBackend.Controllers
 
             var token = await _serviceManager.userService.RegisterUser(registerationDto);
             return Ok(new { Token = token });
-            
+
         }
 
         [HttpPost("InitialSetup")]
@@ -43,11 +43,16 @@ namespace BudgetAppBackend.Controllers
             {
                 throw new BadRequestException("User does not exist or id is missing in claims");
             }
+
+            // Perform the initial setup steps
             await _serviceManager.cardService.CreateCardForUserAsync(id, initialSetupDto.Card, trackChanges: true);
             await _serviceManager.budgetCategoryService.CreateBudgetCategoryForUserAsync(id, initialSetupDto.Category1, trackChanges: true);
             await _serviceManager.budgetCategoryService.CreateBudgetCategoryForUserAsync(id, initialSetupDto.Category2, trackChanges: true);
-            await _serviceManager.userService.InitialSetup(id);
-            return Ok("Setup Completed");
+
+            // Call InitialSetup to mark setup complete and receive new token
+            var newToken = await _serviceManager.userService.InitialSetup(id);
+
+            return Ok(new { Token = newToken, SetupComplete = true });
         }
 
         [Authorize(Roles = "Admin")]
@@ -80,9 +85,18 @@ namespace BudgetAppBackend.Controllers
             var firstName = User.FindFirst("FirstName")?.Value;
             var lastName = User.FindFirst("LastName")?.Value;
             var id = User.FindFirst("Id")?.Value;
+            var setupComplete = User.FindFirst("setupComplete")?.Value;
             var username = User.Identity.Name; // This gives the username as it is ClaimTypes.Name
 
-            return Ok(new { Id = id, FirstName = firstName, LastName = lastName, Username = username });
+
+            return Ok(new
+            {
+                Id = id,
+                FirstName = firstName,
+                LastName = lastName,
+                Username = username,
+                SetupComplete = setupComplete == "True" // Convert string to bool 
+            });
         }
 
         [Authorize]
