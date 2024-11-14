@@ -1,5 +1,6 @@
 using BudgetApp.API.Extension;
 using BudgetAppBackend.Extension;
+using EmailService;
 using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
@@ -14,6 +15,8 @@ LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentD
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigurePosgreSqlContext(builder.Configuration);
+builder.Services.ConfigureEmail(builder.Configuration);
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddControllers();
 
 

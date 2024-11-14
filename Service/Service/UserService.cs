@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using BudgetApp.Domain.Dtos.UserDto;
 using BudgetApp.Domain.Models;
 using Domain.Exceptions;
+using EmailService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,12 +24,14 @@ namespace Service.Service
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger _logger;
         private readonly IConfiguration _configuration;
-        public UserService(UserManager<User> userManager, SignInManager<User> signInManager, ILogger<UserService> logger, IConfiguration configuration)
+        private readonly IEmailSender _emailSender;
+        public UserService(UserManager<User> userManager, SignInManager<User> signInManager, ILogger<UserService> logger, IConfiguration configuration,IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _configuration = configuration;
+            _emailSender = emailSender;
         }
 
         public async Task<string> GenerateJwtToken(User user)
@@ -158,6 +161,13 @@ namespace Service.Service
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, "Customer");
+                // Send welcome email
+                var message = new Message(
+                    new List<string> { user.Email },
+                    "Welcome to ExpenseEase!",
+                    "Thank you for registering with ExpenseEase. Start managing your budget effectively today!"
+                );
+                _emailSender.SendEmail(message); 
             }
             return await GenerateJwtToken(user); ;
         }

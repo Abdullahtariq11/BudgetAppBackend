@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetApp.Application", "Se
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetApp.Infrastructure", "Infrastructure\BudgetApp.Infrastructure.csproj", "{8A14FF58-7453-4042-94F9-0FD5E4168052}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.Shared", "BudgetApp.Shared\BudgetApp.Shared.csproj", "{17CAEDEC-8E2C-4454-9FE0-8AAB0272FD78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetApp.Shared", "BudgetApp.Shared\BudgetApp.Shared.csproj", "{17CAEDEC-8E2C-4454-9FE0-8AAB0272FD78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService", "EmailService\EmailService.csproj", "{70898538-B3F3-45B5-8756-83FB23826027}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{17CAEDEC-8E2C-4454-9FE0-8AAB0272FD78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17CAEDEC-8E2C-4454-9FE0-8AAB0272FD78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17CAEDEC-8E2C-4454-9FE0-8AAB0272FD78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70898538-B3F3-45B5-8756-83FB23826027}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70898538-B3F3-45B5-8756-83FB23826027}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70898538-B3F3-45B5-8756-83FB23826027}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70898538-B3F3-45B5-8756-83FB23826027}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
