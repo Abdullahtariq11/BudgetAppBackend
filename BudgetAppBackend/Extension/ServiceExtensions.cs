@@ -6,6 +6,7 @@ using BudgetApp.Domain.Contracts;
 using BudgetApp.Domain.Models;
 using BudgetApp.Infrastructure;
 using BudgetApp.Infrastructure.Repository;
+using EmailService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -96,6 +97,14 @@ namespace BudgetApp.API.Extension
                     }
                 };
             });
+        }
+
+        public static void ConfigureEmail(this IServiceCollection service,IConfiguration configuration)
+        {
+            var emailConfig = configuration.GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>();
+            service.AddSingleton(emailConfig);
+
         }
 
     }

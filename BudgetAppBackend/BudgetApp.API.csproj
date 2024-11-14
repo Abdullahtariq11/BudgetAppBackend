@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>a9d119ef-8353-4888-a2cc-3152a7c562ca</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BudgetApp.Shared\BudgetApp.Shared.csproj" />
     <ProjectReference Include="..\Domain\BudgetApp.Domain.csproj" />
+    <ProjectReference Include="..\EmailService\EmailService.csproj" />
     <ProjectReference Include="..\Infrastructure\BudgetApp.Infrastructure.csproj" />
     <ProjectReference Include="..\Service\BudgetApp.Application.csproj" />
   </ItemGroup>
