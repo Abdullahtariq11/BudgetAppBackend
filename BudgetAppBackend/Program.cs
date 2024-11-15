@@ -7,6 +7,13 @@ using NLog.Web;
 
 
 var builder = WebApplication.CreateBuilder(args);
+// Load User Secrets in Development Environment
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>();
+}
+
+
 //Add logger service
 LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
