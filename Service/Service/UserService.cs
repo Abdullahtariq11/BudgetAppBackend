@@ -211,5 +211,38 @@ namespace Service.Service
             await _userManager.DeleteAsync(user);
             return true;
         }
+
+        public async Task<string> ForgotPassword(ForgotPasswordDto forgotPasswordDto)
+        {
+            if(string.IsNullOrEmpty(forgotPasswordDto.Email))
+                throw new Exception("Email is Required");
+            var user= await _userManager.FindByEmailAsync(forgotPasswordDto.Email);
+            if (user == null) 
+                throw new Exception("User with the email does not exist");
+            var token=await _userManager.GeneratePasswordResetTokenAsync(user);
+            var resetLink=$"{forgotPasswordDto.ClientUrl}?token={Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(user.Email)}";
+
+            var message = new Message(new List<string>() { user.Email }, "Reset Password", $"Please reset your password using this link: {resetLink}");
+            _emailSender.SendEmail(message);
+
+            return "Password Reset Link Has been sent";
+
+        }
+
+        public async Task<string> ResetPassword(ResetPasswordDto resetPasswordDto)
+        {
+            if (string.IsNullOrEmpty(resetPasswordDto.Email) || string.IsNullOrEmpty(resetPasswordDto.NewPassword) || string.IsNullOrEmpty(resetPasswordDto.Token))
+                throw new Exception("Invalid request");
+            var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
+            if (user == null)
+                throw new Exception("User with the email does not exist");
+            var result = await _userManager.ResetPasswordAsync(user,resetPasswordDto.Token,resetPasswordDto.NewPassword);
+            if(!result.Succeeded)
+            {
+                var errors=string.Join(", ",result.Errors.Select(e=>e.Description));
+                throw new Exception($"Password Rest failed:{errors}");
+            }
+            return "Password has been Reset successfully";
+        }
     }
 }
