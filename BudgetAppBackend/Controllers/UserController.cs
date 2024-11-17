@@ -55,17 +55,17 @@ namespace BudgetAppBackend.Controllers
             return Ok(new { Token = newToken, SetupComplete = true });
         }
 
-        [HttpPost]
+        [HttpPost("ForgotPassword")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
         {
-            var message=_serviceManager.userService.ForgotPassword(forgotPasswordDto);
+            var message= await _serviceManager.userService.ForgotPassword(forgotPasswordDto);
             return Ok(message);
         }
 
-        [HttpPost]
+        [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
         {
-            var message = _serviceManager.userService.ResetPassword(resetPasswordDto);
+            var message = await _serviceManager.userService.ResetPassword(resetPasswordDto);
             return Ok(message);
         }
 
