@@ -15,6 +15,10 @@ namespace Service.Service.Contracts
         public Task<string> RegisterUser(RegisterationDto registerationDto);
         public Task<ICollection<CreatedUserDto>> GetAllUser();
 
+        public Task<string> ForgotPassword(ForgotPasswordDto forgotPasswordDto);
+        public Task<string> ResetPassword(ResetPasswordDto resetPasswordDto);
+
+
         public Task EditUserInfo(UserDetailDto userDetailDto,string userId);
         public Task<string> InitialSetup(string userId);
 

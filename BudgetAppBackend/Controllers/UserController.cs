@@ -55,6 +55,20 @@ namespace BudgetAppBackend.Controllers
             return Ok(new { Token = newToken, SetupComplete = true });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
+        {
+            var message=_serviceManager.userService.ForgotPassword(forgotPasswordDto);
+            return Ok(message);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
+        {
+            var message = _serviceManager.userService.ResetPassword(resetPasswordDto);
+            return Ok(message);
+        }
+
         [Authorize(Roles = "Admin")]
         [HttpGet("Users")]
         public async Task<IActionResult> GetAllUser()
