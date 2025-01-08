@@ -1,197 +1,184 @@
-# 💰 **BudgetApp API**
+# Budget App Backend
 
-**BudgetApp API** is a robust financial management API developed with **ASP.NET Core Web API**. It enables users to manage transactions, budget categories, and cards with a secure authentication system powered by **JWT** (JSON Web Token). The API ensures scalability, clean architecture, and maintainability with modern development practices.
+![GitHub Stars](https://img.shields.io/github/stars/AbdullahTariq11/BudgetAppBackend)
+![GitHub License](https://img.shields.io/github/license/AbdullahTariq11/BudgetAppBackend)
 
----
+## Table of Contents
 
-## ✨ **Features**
+1. [Introduction](#introduction)
+2. [Features](#features)
+3. [API Endpoints](#api-endpoints)
+   - [User Authentication](#user-authentication)
+   - [Expense Tracking](#expense-tracking)
+   - [Category Management](#category-management)
+   - [Card Management](#card-management)
+4. [Database Schema](#database-schema)
+   - [User](#user)
+   - [Expense](#expense)
+   - [Category](#category)
+   - [Card](#card)
+5. [Technologies Used](#technologies-used)
+6. [Project Structure](#project-structure)
+7. [Getting Started](#getting-started)
+   - [Prerequisites](#prerequisites)
+   - [Installation](#installation)
+8. [Contributing](#contributing)
+9. [License](#license)
+10. [Contact](#contact)
 
-- 🔐 **User Authentication**: Secure user registration and login with JWT-based authentication.  
-- 📊 **Transaction Management**: Create, read, update, and delete (CRUD) user transactions.  
-- 🗂️ **Budget Categories**: Manage budget categories with CRUD operations.  
-- 💳 **Card Management**: Add, view, update, and delete cards.  
-- 🛠️ **Custom Middleware**: Handle exceptions with custom middleware.  
-- 📜 **Integrated Logging**: Use **NLog** for advanced logging.  
-- 🔒 **Secured Endpoints**: Token-based authentication for secure API access.  
-- 📖 **API Documentation**: Swagger integration for detailed API documentation.  
+## Introduction
 
----
+The **Budget App** is a personal finance application designed to help users track expenses, manage budgets, and gain insights into their spending habits. This repository contains the backend code for the application, developed using **ASP.NET Core Web API** with a **PostgreSQL database**.
 
-## 🛠️ **Technologies Used**
+## Features
 
-- **Backend Framework**: ASP.NET Core Web API  
-- **Database**: PostgreSQL  
-- **Authentication**: JWT (JSON Web Tokens)  
-- **Logging**: NLog  
-- **Dependency Injection**: ASP.NET Core DI  
-- **Testing**: xUnit and Moq for unit testing  
-- **API Documentation**: Swagger  
+- **User Authentication**: Secure user registration and login with password hashing.
+- **Expense Tracking**: Add, edit, delete, and view expenses with details such as date, amount, and category.
+- **Category Management**: Create, update, and delete expense categories for organized tracking.
+- **Card Management**: Manage user cards, including adding, editing, and deleting cards.
+- **Budgeting**: Set budgets for different categories and monitor spending.
+- **Reporting**: Generate reports to visualize spending trends over time.
 
----
+## API Endpoints
 
-## 📂 **Project Structure**
+### User Authentication
 
-```plaintext
-BudgetAppBackend/
-│
-├── API/              # Controllers and middleware for HTTP requests
-├── Application/      # Business logic services
-├── Domain/           # Entity models and domain contracts
-├── Infrastructure/   # Data access layer (repositories and EF context)
-├── Shared/           # DTOs and common utility classes
-└── BudgetAppBackend.sln
-```
+| Endpoint       | Method | Description            |
+| -------------- | ------ | ---------------------- |
+| `/user/signup` | POST   | Register a new user    |
+| `/user/login`  | POST   | Login an existing user |
 
----
+### Expense Tracking
 
-## 🚀 **Getting Started**
+| Endpoint                                  | Method | Description                     |
+| ----------------------------------------- | ------ | ------------------------------- |
+| `/expense/add`                            | POST   | Add a new expense               |
+| `/expense/edit/{id:int}`                  | PUT    | Edit an existing expense        |
+| `/expense/delete/{id:int}`                | DELETE | Delete an expense               |
+| `/expense/get`                            | GET    | Retrieve all expenses           |
+| `/expense/get/{id:int}`                   | GET    | Retrieve an expense by ID       |
+| `/expense/getByCategory/{categoryId:int}` | GET    | Retrieve expenses by category   |
+| `/expense/getByDate`                      | GET    | Retrieve expenses by date range |
+
+### Category Management
+
+| Endpoint                    | Method | Description               |
+| --------------------------- | ------ | ------------------------- |
+| `/category/add`             | POST   | Add a new category        |
+| `/category/edit/{id:int}`   | PUT    | Edit an existing category |
+| `/category/delete/{id:int}` | DELETE | Delete a category         |
+| `/category/get`             | GET    | Retrieve all categories   |
+| `/category/get/{id:int}`    | GET    | Retrieve a category by ID |
+
+### Card Management
+
+| Endpoint                    | Method | Description               |
+| --------------------------- | ------ | ------------------------- |
+| `/card/add`                 | POST   | Add a new card            |
+| `/card/edit/{id:int}`       | PUT    | Edit an existing card     |
+| `/card/delete/{id:int}`     | DELETE | Delete a card             |
+| `/card/get`                 | GET    | Retrieve all cards        |
+| `/card/get/{id:int}`        | GET    | Retrieve a card by ID     |
+
+## Database Schema
+
+The database schema consists of four main tables:
+
+### User
+
+| Column   | Data Type | Description            |
+| -------- | --------- | ---------------------- |
+| UserId   | int       | Primary key, user ID   |
+| Username | string    | User’s unique username |
+| Email    | string    | User’s email address   |
+| Password | string    | Hashed user password   |
+
+### Expense
+
+| Column      | Data Type | Description                       |
+| ----------- | --------- | --------------------------------- |
+| ExpenseId   | int       | Primary key, expense ID           |
+| UserId      | int       | Foreign key, linked to User table |
+| CategoryId  | int       | Foreign key, linked to Category   |
+| Date        | date      | Expense date                      |
+| Amount      | decimal   | Expense amount                    |
+| Description | string    | Optional description              |
+
+### Category
+
+| Column     | Data Type | Description                       |
+| ---------- | --------- | --------------------------------- |
+| CategoryId | int       | Primary key, category ID          |
+| UserId     | int       | Foreign key, linked to User table |
+| Name       | string    | Name of the category              |
+| Budget     | decimal   | Optional budget amount            |
+
+### Card
+
+| Column     | Data Type | Description                       |
+| ---------- | --------- | --------------------------------- |
+| CardId     | int       | Primary key, card ID              |
+| UserId     | int       | Foreign key, linked to User table |
+| CardName   | string    | Name of the card                  |
+| Balance    | decimal   | Current balance on the card       |
+
+## Technologies Used
+
+- **.NET 7**
+- **ASP.NET Core Web API**
+- **PostgreSQL**
+- **Entity Framework Core**
+- **AutoMapper**
+- **Swashbuckle** (Swagger UI)
+- **BCrypt.Net-Core** (Password hashing)
+- **NLog** (Advanced logging)
+- **xUnit and Moq** (Unit testing)
+
+## Project Structure
+
+- `Controllers`: Handles API requests and responses.
+- `Data`: Includes database context and DTOs (Data Transfer Objects).
+- `Migrations`: Contains database migration files.
+- `Models`: Defines database entity models.
+- `Profiles`: Configures AutoMapper mappings.
+- `Middleware`: Contains custom middleware for exception handling.
+- `Logging`: Configures logging using NLog.
+- `Tests`: Contains unit tests for the project.
+
+## Getting Started
 
 ### Prerequisites
 
-- **.NET 6 SDK** or later  
-- **PostgreSQL Database**  
-- **Visual Studio** or **VS Code**  
-- **IIS** (Optional for deployment)  
-- **NLog** for logging configuration  
+- **.NET 7 SDK**
+- **PostgreSQL Database**
 
----
+### Installation
 
-### ⚙️ **Setup**
-
-#### 1. **Clone the Repository**
-```bash
-git clone https://github.com/Abdullahtariq11/BudgetAppBackend.git
-cd BudgetAppBackend
-```
-
-#### 2. **Configure PostgreSQL Database**
-Update the `appsettings.json` file with your PostgreSQL connection string:
-```json
-"ConnectionStrings": {
-  "PostgresConnectionString": "Server=localhost;Port=5432;Database=BudgetDb;UserId=postgres;Password=YourPassword;"
-}
-```
-
-#### 3. **Configure JWT Authentication**
-Add your JWT settings in `appsettings.json`:
-```json
-"JWT": {
-  "Key": "YourSuperSecretKey",
-  "Issuer": "YourIssuer",
-  "Audience": "YourAudience",
-  "DurationInMinutes": 60
-}
-```
-
-#### 4. **Run Migrations**
-Apply migrations to set up the database schema:
-```bash
-dotnet ef migrations add InitialMigration
-dotnet ef database update
-```
-
-#### 5. **Build and Run the API**
-```bash
-dotnet build
-dotnet run
-```
-The API will be available at: `http://localhost:5000`.
-
-#### 6. **Access Swagger**
-View detailed API documentation at:
-```
-http://localhost:5000/swagger
-```
-
----
-
-## 🔍 **Endpoints Overview**
-
-| **Endpoint**                  | **Method** | **Description**                                   |
-|--------------------------------|------------|---------------------------------------------------|
-| `/api/Users/Register`          | `POST`     | Register a new user                              |
-| `/api/Users/Login`             | `POST`     | Login and generate JWT                           |
-| `/api/Users/UserInfo`          | `GET`      | Get logged-in user information                   |
-| `/api/Users/{userId}/transactions` | `GET`   | Get all transactions for a user                  |
-| `/api/Users/{userId}/BudgetCategories` | `GET`| Get all budget categories for a user             |
-| `/api/Users/{userId}/Card`     | `GET`      | Get all cards for a user                         |
-
----
-
-## 🧪 **Testing**
-
-### Unit Tests
-Run unit tests to ensure the correctness of services and controllers:
-```bash
-dotnet test
-```
-Unit tests cover:
-- Repository Layer  
-- Service Layer  
-- Controller Layer  
-
-### Integration Tests
-Integration tests use an **in-memory database** or a test PostgreSQL instance to validate end-to-end functionality.
-
----
-
-## 📝 **Logging**
-
-- **NLog** is used for logging. Configuration can be adjusted in the `nlog.config` file.  
-- Logs are saved in the `logs/logfile.log` file.
-
----
-
-## 📦 **Deployment**
-
-### Deploying on IIS
-
-1. **Publish the API**:
-   - In Visual Studio, right-click the project and select `Publish`.
-   - Choose the IIS option and publish to a folder.
-
-2. **Configure IIS**:
-   - Add a new site in IIS and point it to the published folder.
-   - Bind the site to the desired port (e.g., 85).
-
-3. **Access the API**:
-   - API available at: `http://localhost:<port>/swagger`.
-
----
-
-## 🤝 **Contributing**
-
-1. Fork the repository.  
-2. Create a feature branch:  
+1. Clone the repository:
    ```bash
-   git checkout -b feature/YourFeature
+   git clone https://github.com/AbdullahTariq11/BudgetAppBackend.git
    ```
-3. Commit your changes:  
+2. Configure the database connection string in `appsettings.json`.
+3. Run database migrations:
    ```bash
-   git commit -m 'Add YourFeature'
+   dotnet ef database update
    ```
-4. Push to the branch:  
+4. Build and run the application:
    ```bash
-   git push origin feature/YourFeature
+   dotnet run
    ```
-5. Open a pull request.
 
----
+## Contributing
 
-## 📜 **License**
+Contributions are welcome! Feel free to submit issues and pull requests.
 
-This project is licensed under the **MIT License**. See the `LICENSE` file for details.
+## License
 
----
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/AbdullahTariq11/BudgetAppBackend/blob/main/LICENSE) file for details.
 
-## 📧 **Contact**
+## Contact
 
-For inquiries or support, contact:  
-**Abdullah Tariq**  
-📧 Email: [abdullahtariq096@gmail.com](mailto:abdullahtariq096@gmail.com)
+- **Developer**: Abdullah Tariq
+- **Email**: [abdullahtariq096@gmail.com](mailto:abdullahtariq096@gmail.com)
+- **Project Link**: [GitHub Repository](https://github.com/AbdullahTariq11/BudgetAppBackend)
 
----
-
-### 🌟 **"Manage your finances, simplify your life!"**  
-
-Feel free to suggest any improvements or report issues in the repository. Happy coding! 🎉
